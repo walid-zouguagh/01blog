@@ -14,6 +14,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,11 +44,15 @@ public class Report {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "reporter_id")
+    @ManyToOne
+    @JoinColumn(name = "reporter_id", nullable = false)
     private UUID reporterId;
 
-    @Column(name = "reported_user_id")
+    @ManyToOne
+    @JoinColumn(name = "reported_user_id", nullable = false)
     private UUID reportedUserId;
+
+    @ManyToOne
 
     @Column(name = "reported_post_id")
     private UUID reportedPostId;

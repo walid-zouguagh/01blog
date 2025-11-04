@@ -10,6 +10,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,14 +25,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 // 📝 Post Table
-// Column	Type	Description
-// id	BIGSERIAL PK	Post ID
-// user_id	BIGINT FK → users.id	Author
-// content	TEXT	Post text or markdown
-// media_url	VARCHAR(255)	Image or video URL
-// created_at	TIMESTAMP DEFAULT NOW()	Date created
-// updated_at	TIMESTAMP	Last update
-// is_hidden	BOOLEAN DEFAULT FALSE	Admin moderation
+// Column Type Description
+// id BIGSERIAL PK Post ID
+// user_id BIGINT FK → users.id Author
+// content TEXT Post text or markdown
+// media_url VARCHAR(255) Image or video URL
+// created_at TIMESTAMP DEFAULT NOW() Date created
+// updated_at TIMESTAMP Last update
+// is_hidden BOOLEAN DEFAULT FALSE Admin moderation
 
 public class Post {
     @Id
@@ -37,7 +40,8 @@ public class Post {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private UUID userId;
 
     @Column(name = "title", nullable = false)
@@ -60,4 +64,10 @@ public class Post {
 
     @Column(name = "is_hidden")
     private Boolean isHidden = false;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
 }
