@@ -10,6 +10,8 @@ import com._01Blog.backend.model.enums.TypeReport;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -50,6 +52,7 @@ public class Report {
     private UUID reportedPostId;
 
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private TypeReport type;
 
     @Column(name = "reason", nullable = false, length = 500)
@@ -57,10 +60,8 @@ public class Report {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-    
+
     @Column(name = "status")
     private StatusReport status;
-
-    
 
 }

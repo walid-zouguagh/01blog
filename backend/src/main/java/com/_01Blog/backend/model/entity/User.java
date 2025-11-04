@@ -3,9 +3,9 @@ package com._01Blog.backend.model.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import javax.management.relation.Role;
-
 import org.hibernate.annotations.UuidGenerator;
+
+import com._01Blog.backend.model.enums.Role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
