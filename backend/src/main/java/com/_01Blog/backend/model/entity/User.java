@@ -42,7 +42,7 @@ public class User {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "user_name", nullable = false, length = 100)
+    @Column(name = "user_name", nullable = false, length = 100, unique = true)
     private String userName;
 
     @Column(name = "first_name", nullable = false, length = 100)
