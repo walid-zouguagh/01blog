@@ -74,3 +74,8 @@
     └── pom.xml
 
     ```
+
+## How To run
+docker start 01blogdb 
+zsh rundb.sh
+zsh docker.sh
