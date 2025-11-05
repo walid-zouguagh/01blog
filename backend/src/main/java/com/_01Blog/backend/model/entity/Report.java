@@ -16,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,16 +47,15 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "reporter_id", nullable = false)
-    private UUID reporterId;
+    private User reporterId;
 
     @ManyToOne
     @JoinColumn(name = "reported_user_id", nullable = false)
-    private UUID reportedUserId;
+    private User reportedUserId;
 
     @ManyToOne
-
-    @Column(name = "reported_post_id")
-    private UUID reportedPostId;
+    @JoinColumn(name = "reported_post_id", nullable = false)
+    private Post reportedPostId;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -67,7 +67,13 @@ public class Report {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusReport status;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
 }

@@ -9,6 +9,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,14 +36,20 @@ public class Like {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "post_id")  // BIGINT FK → posts.id	Target post
-    private UUID postId;
+    @ManyToOne
+    @JoinColumn(name = "post_id") // BIGINT FK → posts.id Target post
+    private Post postId;
 
-    @Column(name = "user_id")  // BIGINT FK → users.id	Who liked
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id") // BIGINT FK → users.id Who liked
+    private User userId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
 }

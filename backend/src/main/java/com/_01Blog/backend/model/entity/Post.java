@@ -3,16 +3,21 @@ package com._01Blog.backend.model.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.hibernate.annotations.UuidGenerator;
+
+import com._01Blog.backend.model.enums.MediaType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,16 +29,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-// 📝 Post Table
-// Column Type Description
-// id BIGSERIAL PK Post ID
-// user_id BIGINT FK → users.id Author
-// content TEXT Post text or markdown
-// media_url VARCHAR(255) Image or video URL
-// created_at TIMESTAMP DEFAULT NOW() Date created
-// updated_at TIMESTAMP Last update
-// is_hidden BOOLEAN DEFAULT FALSE Admin moderation
-
 public class Post {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -42,7 +37,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private UUID userId;
+    private User userId;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -50,6 +45,7 @@ public class Post {
     @Column(name = "content")
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "media_type")
     private MediaType mediaType;
 
@@ -68,6 +64,11 @@ public class Post {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
 }

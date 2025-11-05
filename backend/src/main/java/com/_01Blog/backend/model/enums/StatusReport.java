@@ -1,7 +1,7 @@
 package com._01Blog.backend.model.enums;
 
 public enum StatusReport {
-    PENDING, 
+    PENDING,
     RESOLVED,
     DISMISSED
 }

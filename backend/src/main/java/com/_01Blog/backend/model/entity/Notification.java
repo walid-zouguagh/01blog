@@ -9,11 +9,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 // 🔔 Notification Table
 // Column	Type	Description
@@ -24,7 +26,6 @@ import lombok.NoArgsConstructor;
 // message	TEXT	Content (e.g., “John posted a new article”)
 // is_read	BOOLEAN DEFAULT FALSE	Status
 // created_at	TIMESTAMP DEFAULT NOW()	Timestamp
-
 
 @Table(name = "notification")
 @Entity
@@ -37,15 +38,18 @@ public class Notification {
     @GeneratedValue(generator = "UUID")
     @UuidGenerator
     private UUID id;
-
-    @Column(name = "user_id")
-    private UUID userId;
-
-    @Column(name = "related_user_id")
-    private UUID relatedUserId;
-
-    @Column(name = "related_post_id")
-    private UUID relatedPostId;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId;
+    
+    @ManyToOne
+    @JoinColumn(name = "related_user_id", nullable = false)
+    private User relatedUserId;
+    
+    @ManyToOne
+    @JoinColumn(name = "related_post_id", nullable = false)
+    private Post relatedPostId;
 
     @Column(name = "message") // Content (e.g., “John posted a new article”)
     private String message;
@@ -56,5 +60,9 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
 }

@@ -58,22 +58,24 @@ public class User {
     private String password;
 
     @Column(name = "bio", length = 500)
-    private String bio;  // Description
+    private String bio; // Description
 
     @Column(name = "profile_image")
     private String profileImage;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role; // = Role.USER;
+    private Role role = Role.USER;
+
+    @Column(name = "enabled")
     private Boolean enabled;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-
-
 
 }
