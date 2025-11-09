@@ -68,7 +68,7 @@ public class User {
     private Role role = Role.USER;
 
     @Column(name = "enabled")
-    private Boolean enabled;
+    private Boolean enabled = true;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
