@@ -2,8 +2,13 @@ package com._01Blog.backend.service;
 
 import com._01Blog.backend.model.dto.AuthResponse;
 import com._01Blog.backend.model.dto.LoginDto;
+import com._01Blog.backend.model.dto.RegisterDto;
 import com._01Blog.backend.model.entity.User;
+import com._01Blog.backend.model.enums.Role;
 import com._01Blog.backend.model.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+
 import com._01Blog.backend.exception.ExceptionProgram;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +47,46 @@ public class UserService {
         // authResponse.setEmail(user.getEmail());
         // authResponse.setRole(user.getRole().name());
 
+        return authResponse;
+    }
+
+    @Transactional
+    public AuthResponse register(RegisterDto request) throws ExceptionProgram {
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ExceptionProgram(400, "email already exists");
+        }
+
+        if (userRepository.existsByUserName(request.getUserName())) {
+            throw new ExceptionProgram(400, "username already exists");
+        }
+
+        User user = new User();
+        user.setUserName(request.getUserName());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setBio(request.getBio());
+
+        // var image = request.getProfileImage();
+        // if (image != null) {
+        // user.setProfileImage(image);
+        // } else {
+        // user.setProfileImage("default-image.jpg");
+        // }
+
+        // Assign role
+        if (request.getRole() != null) {
+            user.setRole(request.getRole());
+        } else {
+            user.setRole(Role.USER);
+        }
+
+        userRepository.save(user);
+        String token = jwtService.generateToken(user);
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setToken(token);
         return authResponse;
     }
 }

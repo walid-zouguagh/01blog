@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 // enabled	BOOLEAN DEFAULT TRUE	Account active
 // created_at	TIMESTAMP DEFAULT NOW()	Registration date
 
-@Table(name = "user")
+@Table(name = "users")
 @Entity
 @Data
 @AllArgsConstructor
@@ -60,8 +60,8 @@ public class User {
     @Column(name = "bio", length = 500)
     private String bio; // Description
 
-    @Column(name = "profile_image")
-    private String profileImage;
+    // @Column(name = "profile_image")
+    // private String profileImage;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

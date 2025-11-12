@@ -80,6 +80,8 @@ docker start 01blogdb
 zsh rundb.sh
 zsh docker.sh
 
+psql -U admin -d 01blogdb
+
 ## Instructions
 
     Backend
@@ -181,6 +183,7 @@ zsh docker.sh
         Technologies used
 
 ## Evaluation
+
     This project is evaluated through peer-to-peer code review and functional demo. Evaluation criteria include:
 
         💡 Functionality: All features implemented and working as expected
@@ -190,6 +193,7 @@ zsh docker.sh
         🎨 UI/UX: Responsive, intuitive, and clean interface
 
 ## Bonus Features (Optional but Recommended)
+
     Real-time updates using WebSockets (for comments or notifications)
 
     infinite scroll on feeds

@@ -11,4 +11,9 @@ import com._01Blog.backend.model.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmail(String email); // Query Derivation Rules : find : select, By : where, Email : value
+
+    boolean existsByEmail(String email);
+
+    boolean existsByUserName(String userName);
+
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.model.dto.AuthResponse;
 import com._01Blog.backend.model.dto.LoginDto;
+import com._01Blog.backend.model.dto.RegisterDto;
 import com._01Blog.backend.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,17 @@ import lombok.RequiredArgsConstructor;
 // @RequestMapping("/auth")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping(path = "/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginDto request) throws ExceptionProgram {
         AuthResponse response = userService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(path = "/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterDto request) throws ExceptionProgram {
+        AuthResponse response = userService.register(request);
         return ResponseEntity.ok(response);
 
     }

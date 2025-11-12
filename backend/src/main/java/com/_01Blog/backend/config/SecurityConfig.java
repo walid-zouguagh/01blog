@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    // private final UserRepository userRepository;
 
     // Start configuration : open endpoint, close endpoint ... all configurations
     @Bean // Bean for injection a methods, Implementation for injection
@@ -49,4 +50,26 @@ public class SecurityConfig {
             throws Exception {
         return config.getAuthenticationManager();
     }
+
+    // @Bean
+    // public UserDetailsService userDetailsService() {
+    // var user = userRepository.findByEmail(email)
+    // .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+    // return User.builder()
+    // .username(user.getEmail())
+    // .password(user.getPassword())
+    // .roles(user.getRole().name())
+    // .build();
+    // }
+
+    // public UserDetailsService userDetailsService() {
+    // return email -> userRepository.findByEmail(email)
+    // .map(user -> org.springframework.security.core.userdetails.User
+    // .withUsername(user.getUsername())
+    // .password(user.getPassword())
+    // .roles(user.getRole().toUpperCase())
+    // .build())
+    // .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    // }
 }
