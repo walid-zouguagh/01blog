@@ -29,5 +29,5 @@ yarn-error.log*
 
 
 # Ignore images
-/uploads/
+/backend/uploads/
 
