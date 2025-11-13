@@ -6,6 +6,7 @@ import com._01Blog.backend.model.dto.RegisterDto;
 import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.enums.Role;
 import com._01Blog.backend.model.repository.UserRepository;
+import com._01Blog.backend.util.Upload;
 
 import jakarta.transaction.Transactional;
 
@@ -69,12 +70,12 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setBio(request.getBio());
 
-        // var image = request.getProfileImage();
-        // if (image != null) {
-        // user.setProfileImage(image);
-        // } else {
-        // user.setProfileImage("default-image.jpg");
-        // }
+        var image = request.getProfileImage();
+        if (image != null) {
+            user.setProfileImage(Upload.saveImage(image));
+        } else {
+            user.setProfileImage("default-image.jpg");
+        }
 
         // Assign role
         if (request.getRole() != null) {

@@ -1,16 +1,21 @@
 package com._01Blog.backend.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.model.dto.AuthResponse;
 import com._01Blog.backend.model.dto.LoginDto;
 import com._01Blog.backend.model.dto.RegisterDto;
+import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,10 +32,22 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterDto request) throws ExceptionProgram {
+    public ResponseEntity<AuthResponse> register(@ModelAttribute RegisterDto request) throws ExceptionProgram {
         AuthResponse response = userService.register(request);
         return ResponseEntity.ok(response);
 
     }
+
+    // @PostMapping(value = "/register", consumes = "multipart/form-data")
+    // public ResponseEntity<AuthResponse> register(
+    // @RequestPart("user") RegisterDto request,
+    // @RequestPart(value = "profileImage", required = false) MultipartFile
+    // profileImage)
+    // throws ExceptionProgram {
+
+    // request.setProfileImage(profileImage);
+    // AuthResponse response = userService.register(request);
+    // return ResponseEntity.ok(response);
+    // }
 
 }
