@@ -5,7 +5,6 @@ import java.security.Key;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
-// import org.springframework.boot.autoconfigure.ssl.SslBundleProperties.Key;
 import org.springframework.stereotype.Service;
 
 import com._01Blog.backend.model.entity.User;
@@ -17,7 +16,7 @@ import io.jsonwebtoken.security.Keys;
 // JwtService (Generate + Validate Token)
 @Service
 public class JwtService {
-    private static final long EXPIRATION = 1000 * 60 * 60 * 24;
+    private static final long EXPIRATION = 1000L * 60 * 60 * 24;
 
     @Value("${jwt.key}")
     private String secretNuber;
