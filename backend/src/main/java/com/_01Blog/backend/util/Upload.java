@@ -85,6 +85,7 @@ public class Upload {
     }
 
     public static boolean isValidVideo(MultipartFile file) {
+        System.out.println("vidoi 1111111111111111111111111111111");
         try {
             String contentType = file.getContentType();
             if (contentType == null || !contentType.startsWith("video/")) {

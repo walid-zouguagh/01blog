@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.model.dto.PostDto;
 import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.service.PostService;
@@ -27,7 +28,7 @@ public class PostController {
     // Create Posts
     @PostMapping(path = "create_post")
     public ResponseEntity<?> createPost(@Valid @ModelAttribute PostDto postDto,
-            @RequestAttribute("user") User user) {
+            @RequestAttribute("user") User user) throws ExceptionProgram {
         // System.out.println("you are now in post controller");
         // System.out.println(user.toString());
         PostDto post = postService.save(postDto, user);
