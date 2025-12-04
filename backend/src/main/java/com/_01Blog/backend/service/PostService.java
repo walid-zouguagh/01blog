@@ -2,11 +2,13 @@ package com._01Blog.backend.service;
 
 import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.mapper.PostMapper;
+import com._01Blog.backend.model.dto.MediaDto;
 import com._01Blog.backend.model.dto.PostDto;
 import com._01Blog.backend.model.entity.Post;
 import com._01Blog.backend.model.entity.PostMedia;
 import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.enums.MediaType;
+import com._01Blog.backend.model.repository.MediaTypeRepository;
 import com._01Blog.backend.model.repository.PostRepository;
 import com._01Blog.backend.util.Upload;
 
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,6 +28,7 @@ public class PostService {
 
     private final PostRepository postRepository; // ← remove static!
     private final PostMapper postMapper; // ← Spring injects this
+    private final MediaTypeRepository mediaTypeRepository;
 
     @Transactional
     public PostDto save(PostDto postDto, User user) throws ExceptionProgram {
@@ -38,8 +42,8 @@ public class PostService {
         // 2. Handle uploaded files
         MultipartFile[] files = postDto.getImages();
 
-        if (files != null && files.length > 10) {
-            throw new ExceptionProgram(400, "Maximum 10 files allowed");
+        if (files != null && files.length > 5) {
+            throw new ExceptionProgram(400, "Maximum 5 files allowed");
         }
 
         if (files != null && files.length > 0) {
@@ -82,6 +86,73 @@ public class PostService {
 
         // 4. Return clean DTO
         return postMapper.toDto(savedPost);
+    }
+
+    @Transactional
+    public PostDto update(PostDto postDto, User user, String[] deleteImage) throws ExceptionProgram {
+        var images = postDto.getImages();
+        Post postUpdated = postRepository.findById(postDto.getId())
+                .orElseThrow(() -> new ExceptionProgram(400, "Post Don't found"));
+
+        if (postDto.getUser().getId() != user.getId() || postUpdated.getIsHidden()) {
+            throw new ExceptionProgram(404, "You cannot update this post.");
+        }
+
+        List<PostMedia> medias = mediaTypeRepository.findMediasByPostId(postUpdated.getId());
+
+        if (images != null && deleteImage != null && images.length + medias.size() - deleteImage.length > 5) {
+            throw new ExceptionProgram(400, "Maximum 5 files allowed");
+        }
+
+        if (images != null && images.length > 0) {
+            if (postDto.getMedia() == null) {
+                postDto.setMedia(new ArrayList<>());
+            }
+
+            for (MultipartFile file : images) {
+                if (file.getSize() > 100L * 1024 * 1024) {
+                    throw new ExceptionProgram(400, "File too big! Max 100MB");
+                }
+
+                String fileUrl;
+                MediaType type;
+
+                try {
+                    fileUrl = Upload.saveImage(file);
+                    type = MediaType.IMAGE;
+
+                } catch (Exception e) {
+                    try {
+                        fileUrl = Upload.saveVideo(file);
+                        type = MediaType.VIDEO;
+                    } catch (Exception ex) {
+                        throw new ExceptionProgram(400, "Failed to process file: " + file.getOriginalFilename());
+                    }
+                }
+                PostMedia media = new PostMedia();
+                media.setUrl(fileUrl);
+                media.setType(type);
+                media.setPost(postUpdated);
+
+                postUpdated.getMedias().add(media);
+            }
+
+            if (deleteImage != null) {
+                for (String url : deleteImage) {
+                    if (Upload.contain(medias, url)) {
+                        mediaTypeRepository.deleteByUrl(url);
+                    }
+                }
+            }
+
+            if (postDto.getMedia() != null) {
+                for (MediaDto med : postDto.getMedia()) {
+                    mediaTypeRepository.save(null);
+                }
+            }
+
+        }
+
     }
 
     public PostDto findById(UUID id) {

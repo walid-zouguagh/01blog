@@ -64,6 +64,11 @@ public class Post {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public void setUrl(String url) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setUrl'");
+    }
 }
 
 // ==================================

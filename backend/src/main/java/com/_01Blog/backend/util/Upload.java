@@ -5,6 +5,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -13,6 +14,8 @@ import java.awt.image.BufferedImage;
 import org.springframework.web.multipart.MultipartFile;
 
 import com._01Blog.backend.exception.ExceptionProgram;
+import com._01Blog.backend.model.entity.PostMedia;
+import com._01Blog.backend.model.enums.MediaType;
 
 public class Upload {
     private static final String UPLOAD_DIR_IMAGE = "/uploads/images/";
@@ -85,7 +88,6 @@ public class Upload {
     }
 
     public static boolean isValidVideo(MultipartFile file) {
-        System.out.println("vidoi 1111111111111111111111111111111");
         try {
             String contentType = file.getContentType();
             if (contentType == null || !contentType.startsWith("video/")) {
@@ -127,7 +129,7 @@ public class Upload {
         return fileName;
     }
 
-    public static void delete(String file, String type) throws ExceptionProgram {
+    public static void delete(String file, MediaType type) throws ExceptionProgram {
         if (file == null || file.isEmpty()) {
             return;
         }
@@ -135,9 +137,9 @@ public class Upload {
         String dirBackendString = System.getProperty("user.dir");
         String baseDir;
 
-        if ("image".equalsIgnoreCase(type)) {
+        if ("image".equalsIgnoreCase(type.IMAGE.toString())) {
             baseDir = UPLOAD_DIR_IMAGE;
-        } else if ("video".equalsIgnoreCase(type)) {
+        } else if ("video".equalsIgnoreCase(type.VIDEO.toString())) {
             baseDir = UPLOAD_DIR_VIDEO;
         } else {
             throw new ExceptionProgram(500, "unknown file type" + type);
@@ -154,13 +156,14 @@ public class Upload {
         }
     }
 
-    // public static boolean contain(List<Image> images, String img) {
-    // for (Image image : images) {
-    // if (image.getUrl().equals(img)) {
-    // return true;
-    // }
-    // }
-    // return false;
-    // }
+    public static boolean contain(List<PostMedia> medias, String img) {
+        if (medias == null || img == null) return false;
+        for (PostMedia image : medias) {
+            if (image.getUrl().equals(img)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
