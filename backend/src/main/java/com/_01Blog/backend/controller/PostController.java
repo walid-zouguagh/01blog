@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,8 +44,8 @@ public class PostController {
     }
 
     // Edit Posts
-    // @PutMapping(path = "edit_post")
-    @PutMapping(path = "/edit_post/{id}")
+    @PutMapping(path = "edit_post")
+    // @PutMapping(path = "/edit_post/{id}")
     public ResponseEntity<?> editPost(@Valid @ModelAttribute PostDto postDto,
             @RequestAttribute("user") User user,
             @RequestParam(name = "deleteImage", defaultValue = "null") String[] deleteImage) throws ExceptionProgram {
@@ -52,5 +54,20 @@ public class PostController {
     }
 
     // Delete Posts
+    @DeleteMapping(path = "delete_post")
+    public ResponseEntity<?> deletePost(
+            @RequestParam(defaultValue = "0", name = "postId") UUID postId,
+            @RequestAttribute("user") User user) throws Exception {
+        postService.delete(postId, user);
+        return ResponseEntity.ok(postId);
+    }
+
+    // Get All Posts
+    @GetMapping(path = "posts")
+    public ResponseEntity<?> getPosts(
+            @RequestParam(defaultValue = "0", name = "offset") int offset,
+            @RequestAttribute("user") User user) throws Exception {
+        return ResponseEntity.ok(postService.getPosts(user, offset));
+    }
 
 }

@@ -8,7 +8,7 @@ import com._01Blog.backend.model.entity.PostMedia;
 
 @Component
 public class MediaMapper {
-    public PostMedia toEntity(MediaDto media, Post post) {
+    public static PostMedia toEntity(MediaDto media, Post post) {
         PostMedia postMedia = new PostMedia();
         postMedia.setUrl(media.getUrl());
         postMedia.setType(media.getType());

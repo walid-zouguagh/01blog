@@ -1,6 +1,7 @@
 package com._01Blog.backend.service;
 
 import com._01Blog.backend.exception.ExceptionProgram;
+import com._01Blog.backend.mapper.MediaMapper;
 import com._01Blog.backend.mapper.PostMapper;
 import com._01Blog.backend.model.dto.MediaDto;
 import com._01Blog.backend.model.dto.PostDto;
@@ -8,7 +9,8 @@ import com._01Blog.backend.model.entity.Post;
 import com._01Blog.backend.model.entity.PostMedia;
 import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.enums.MediaType;
-import com._01Blog.backend.model.repository.MediaTypeRepository;
+import com._01Blog.backend.model.enums.Role;
+import com._01Blog.backend.model.repository.PostMediaRepository;
 import com._01Blog.backend.model.repository.PostRepository;
 import com._01Blog.backend.util.Upload;
 
@@ -28,7 +30,7 @@ public class PostService {
 
     private final PostRepository postRepository; // ← remove static!
     private final PostMapper postMapper; // ← Spring injects this
-    private final MediaTypeRepository mediaTypeRepository;
+    private final PostMediaRepository postMediaRepository;
 
     @Transactional
     public PostDto save(PostDto postDto, User user) throws ExceptionProgram {
@@ -98,7 +100,7 @@ public class PostService {
             throw new ExceptionProgram(404, "You cannot update this post.");
         }
 
-        List<PostMedia> medias = mediaTypeRepository.findMediasByPostId(postUpdated.getId());
+        List<PostMedia> medias = postMediaRepository.findMediasByPostId(postUpdated.getId());
 
         if (images != null && deleteImage != null && images.length + medias.size() - deleteImage.length > 5) {
             throw new ExceptionProgram(400, "Maximum 5 files allowed");
@@ -136,22 +138,42 @@ public class PostService {
 
                 postUpdated.getMedias().add(media);
             }
-
-            if (deleteImage != null) {
-                for (String url : deleteImage) {
-                    if (Upload.contain(medias, url)) {
-                        mediaTypeRepository.deleteByUrl(url);
-                    }
-                }
-            }
-
-            if (postDto.getMedia() != null) {
-                for (MediaDto med : postDto.getMedia()) {
-                    mediaTypeRepository.save(null);
-                }
-            }
-
         }
+        if (deleteImage != null) {
+            for (String url : deleteImage) {
+                if (Upload.contain(medias, url)) {
+                    postMediaRepository.deleteByUrl(url);
+                }
+            }
+        }
+
+        if (postDto.getMedia() != null) {
+            for (MediaDto med : postDto.getMedia()) {
+                postMediaRepository.save(MediaMapper.toEntity(med, postUpdated));
+            }
+        }
+        postUpdated.setTitle(postDto.getTitle());
+        postUpdated.setContent(postDto.getContent());
+        postRepository.save(postUpdated);
+        return postMapper.toDto(postUpdated);
+
+    }
+
+    // delete post
+    @Transactional
+    public void delete(UUID postId, User user) throws ExceptionProgram {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ExceptionProgram(400, "Post Not found"));
+
+        if (post.getUser().getId() == user.getId() || user.getRole() == Role.ADMIN) {
+            postRepository.deleteById(postId);
+        } else {
+            throw new ExceptionProgram(400, "you can't delete this post");
+        }
+
+    }
+
+    public List<PostDto> getPosts(User user, int offset) throws ExceptionProgram {
 
     }
 
