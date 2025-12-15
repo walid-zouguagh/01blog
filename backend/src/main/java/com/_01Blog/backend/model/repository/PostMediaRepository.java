@@ -11,4 +11,6 @@ public interface PostMediaRepository extends JpaRepository<PostMedia, UUID> {
     List<PostMedia> findMediasByPostId(UUID id);
 
     void deleteByUrl(String url);
+
+    List<PostMedia> findByPostId(UUID id);
 }

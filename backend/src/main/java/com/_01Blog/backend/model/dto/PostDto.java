@@ -17,7 +17,7 @@ import lombok.Data;
 @Data
 public class PostDto {
     private UUID id;
-    private User user;
+    private RegisterDto user;
     @NotBlank
     @Size(min = 3, max = 100)
     private String title;

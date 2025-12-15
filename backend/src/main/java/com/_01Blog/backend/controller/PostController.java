@@ -1,13 +1,12 @@
 package com._01Blog.backend.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -63,11 +62,23 @@ public class PostController {
     }
 
     // Get All Posts
-    @GetMapping(path = "posts")
-    public ResponseEntity<?> getPosts(
+    @GetMapping("posts")
+    public ResponseEntity<List<PostDto>> getPosts(
             @RequestParam(defaultValue = "0", name = "offset") int offset,
-            @RequestAttribute("user") User user) throws Exception {
-        return ResponseEntity.ok(postService.getPosts(user, offset));
+            @RequestAttribute("user") User currentUser) throws ExceptionProgram { // ← you already have this from
+                                                                                  // JwtAuthFilter
+
+        List<PostDto> posts = postService.getPosts(currentUser, offset);
+        return ResponseEntity.ok(posts);
+    }
+
+    // Get posts from following users
+    @GetMapping("subscribe-posts")
+    public ResponseEntity<List<PostDto>> getSubscribePosts(
+            @RequestParam(defaultValue = "0", name = "offset") int offset,
+            @RequestAttribute("user") User currentUser) {
+        List<PostDto> posts = postService.getSubscribePosts(currentUser, offset);
+        return ResponseEntity.ok(posts);
     }
 
 }

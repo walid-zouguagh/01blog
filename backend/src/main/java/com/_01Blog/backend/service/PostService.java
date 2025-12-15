@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -173,8 +174,74 @@ public class PostService {
 
     }
 
-    public List<PostDto> getPosts(User user, int offset) throws ExceptionProgram {
+    // public List<PostDto> getPosts(User user, int offset) throws ExceptionProgram
+    // {
+    // int pageSize = 10;
 
+    // return postRepository.getPosts(user.getId(), offset, pageSize, false) // ←
+    // add pageSize
+    // .stream()
+    // .map(post -> {
+    // PostReq postReq = PostConvert.convertToPostReq(post);
+
+    // // Fix typo: findImgesByPostId → findImagesByPostId
+    // List<ImageReq> images = postMediaRepository.findImagesByPostId(post.getId())
+    // .stream()
+    // .map(MediaMapper::convertToImageUtil) // fix this line
+    // .toList();
+
+    // postReq.setImages(images);
+    // return postReq;
+    // })
+    // .toList();
+    // }
+
+    public List<PostDto> getPosts(User currentUser, int offset) throws ExceptionProgram {
+        // int pageSize = 10;
+
+        // Get posts for this user (or all? you decide)
+        // If you want ALL posts → use null or separate method
+        List<Map<String, Object>> posts = postRepository.getPosts(currentUser.getId(), offset);
+
+        return posts.stream()
+                .map(post -> {
+                    // Convert Post entity → PostDto
+                    // System.out.println(post.getLikes().size());
+                    PostDto postDto = postMapper.toDto(post); // ← BEST WAY!
+
+                    // Get media (images + videos) for this post
+                    List<MediaDto> mediaList = postMediaRepository
+                            .findByPostId(postDto.getId()) // ← clean method name
+                            .stream()
+                            .map(media -> new MediaDto(media.getUrl(), media.getType()))
+                            .toList();
+
+                    postDto.setMedia(mediaList); // ← set media list
+                    return postDto;
+                })
+                .toList();
+    }
+
+    public List<PostDto> getSubscribePosts(User currentUser, int offset) {
+        List<Map<String, Object>> posts = postRepository.getPosts(currentUser.getId(), offset);
+
+        return posts.stream()
+                .map(post -> {
+                    // Convert Post entity → PostDto
+                    // System.out.println(post.getLikes().size());
+                    PostDto postDto = postMapper.toDto(post); // ← BEST WAY!
+
+                    // Get media (images + videos) for this post
+                    List<MediaDto> mediaList = postMediaRepository
+                            .findByPostId(postDto.getId()) // ← clean method name
+                            .stream()
+                            .map(media -> new MediaDto(media.getUrl(), media.getType()))
+                            .toList();
+
+                    postDto.setMedia(mediaList); // ← set media list
+                    return postDto;
+                })
+                .toList();
     }
 
     public PostDto findById(UUID id) {

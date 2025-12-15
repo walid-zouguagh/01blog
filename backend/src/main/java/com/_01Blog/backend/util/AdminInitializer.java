@@ -17,16 +17,21 @@ public class AdminInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
+        try
+        {
+            User user = new User();
+            user.setUserName("walid");
+            user.setFirstName("walid");
+            user.setLastName("zouguagh");
+            user.setEmail("walid@gmail.com");
+            user.setPassword("123");
+            user.setBio("Admin");
+            user.setRole(Role.ADMIN);
+            userRepository.save(user);
+             
+        }catch (Exception e) {
+            
+        }
         // throw new UnsupportedOperationException("Unimplemented method 'run'");
-        User user = new User();
-        user.setUserName("walid");
-        user.setFirstName("walid");
-        user.setLastName("zouguagh");
-        user.setEmail("walid@gmail.com");
-        user.setPassword("123");
-        user.setBio("Admin");
-        user.setRole(Role.ADMIN);
-        userRepository.save(user);
     }
 }
