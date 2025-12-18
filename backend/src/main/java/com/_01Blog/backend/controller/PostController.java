@@ -73,7 +73,7 @@ public class PostController {
     }
 
     // Get posts from following users
-    @GetMapping("subscribe-posts")
+    @GetMapping(path = "subscribe-posts")
     public ResponseEntity<List<PostDto>> getSubscribePosts(
             @RequestParam(defaultValue = "0", name = "offset") int offset,
             @RequestAttribute("user") User currentUser) {

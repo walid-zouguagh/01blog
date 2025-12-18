@@ -201,7 +201,8 @@ public class PostService {
 
         // Get posts for this user (or all? you decide)
         // If you want ALL posts → use null or separate method
-        List<Map<String, Object>> posts = postRepository.getPosts(currentUser.getId(), offset);
+        UUID userId = currentUser.getId();
+        List<Map<String, Object>> posts = postRepository.getPosts(userId, offset);
 
         return posts.stream()
                 .map(post -> {
@@ -223,7 +224,8 @@ public class PostService {
     }
 
     public List<PostDto> getSubscribePosts(User currentUser, int offset) {
-        List<Map<String, Object>> posts = postRepository.getPosts(currentUser.getId(), offset);
+        UUID userId = currentUser.getId();
+        List<Map<String, Object>> posts = postRepository.getSubscribePosts(userId, offset);
 
         return posts.stream()
                 .map(post -> {
