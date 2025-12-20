@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor // ← BEST! Auto-injects final fields
@@ -212,7 +211,7 @@ public class PostService {
 
                     // Get media (images + videos) for this post
                     List<MediaDto> mediaList = postMediaRepository
-                            .findByPostId(postDto.getId()) // ← clean method name
+                            .findMediasByPostId(postDto.getId()) // ← clean method name
                             .stream()
                             .map(media -> new MediaDto(media.getUrl(), media.getType()))
                             .toList();
@@ -235,7 +234,7 @@ public class PostService {
 
                     // Get media (images + videos) for this post
                     List<MediaDto> mediaList = postMediaRepository
-                            .findByPostId(postDto.getId()) // ← clean method name
+                            .findMediasByPostId(postDto.getId()) // ← clean method name
                             .stream()
                             .map(media -> new MediaDto(media.getUrl(), media.getType()))
                             .toList();
@@ -246,15 +245,47 @@ public class PostService {
                 .toList();
     }
 
-    public PostDto findById(UUID id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found: " + id));
-        return postMapper.toDto(post);
+    public List<PostDto> getPostsUser(User currentUser, int offset) {
+        UUID userId = currentUser.getId();
+        List<Map<String, Object>> posts = postRepository.getPostsUser(userId, offset);
+
+        return posts.stream()
+                .map(post -> {
+                    // Convert Post entity → PostDto
+                    // System.out.println(post.getLikes().size());
+                    PostDto postDto = postMapper.toDto(post); // ← BEST WAY!
+
+                    // Get media (images + videos) for this post
+                    List<MediaDto> mediaList = postMediaRepository
+                            .findMediasByPostId(postDto.getId()) // ← clean method name
+                            .stream()
+                            .map(media -> new MediaDto(media.getUrl(), media.getType()))
+                            .toList();
+
+                    postDto.setMedia(mediaList); // ← set media list
+                    return postDto;
+                })
+                .toList();
     }
 
-    public List<PostDto> findAll() {
-        return postRepository.findAll().stream()
-                .map(postMapper::toDto)
-                .collect(Collectors.toList());
+    public PostDto getPost(User currentUser, UUID postId) {
+        UUID userId = currentUser.getId();
+        Map<String, Object> post = postRepository.getPost(userId, postId);
+        if (post != null && post.size() > 0) {
+            PostDto postDto = postMapper.toDto(post); // ← BEST WAY!
+
+            // Get media (images + videos) for this post
+            List<MediaDto> mediaList = postMediaRepository
+                    .findMediasByPostId(postDto.getId()) // ← clean method name
+                    .stream()
+                    .map(media -> new MediaDto(media.getUrl(), media.getType()))
+                    .toList();
+
+            postDto.setMedia(mediaList);
+            return postDto;
+
+        } else {
+            return null;
+        }
     }
 }

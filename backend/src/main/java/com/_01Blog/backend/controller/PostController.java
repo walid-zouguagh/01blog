@@ -81,4 +81,27 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    // Get User Posts
+    @GetMapping(path = "user_post")
+    public ResponseEntity<List<PostDto>> getUserPosts(
+            @RequestParam(defaultValue = "0", name = "offset") int offset,
+            @RequestAttribute("user") User currentUser) throws ExceptionProgram {
+
+        List<PostDto> posts = postService.getPostsUser(currentUser, offset);
+        return ResponseEntity.ok(posts);
+    }
+
+    // Get Post By Id
+    @GetMapping(path = "post")
+    public ResponseEntity<?> getPost(
+            @RequestParam(defaultValue = "0", name = "postId") UUID postId,
+            @RequestAttribute("user") User currentUser) throws Exception {
+        PostDto post = postService.getPost(currentUser, postId);
+        if (post != null) {
+            return ResponseEntity.ok(post);
+        } else {
+            return ResponseEntity.status(404).body("Post Not found");
+        }
+    }
+
 }
