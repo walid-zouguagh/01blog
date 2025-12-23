@@ -54,7 +54,7 @@ public class Post {
     // THIS IS THE MAGIC: One post → Many medias
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostMedia> medias = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
