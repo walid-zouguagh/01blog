@@ -50,5 +50,7 @@ public class RegisterDto {
     private int followers;
     private int following;
     private Role role;
-    private Boolean enabled;
+    private boolean enabled;
+    private boolean myAccount;
+    private boolean hasConnect;
 }

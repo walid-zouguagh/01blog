@@ -5,15 +5,25 @@ import com._01Blog.backend.model.dto.LoginDto;
 import com._01Blog.backend.model.dto.RegisterDto;
 import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.enums.Role;
+import com._01Blog.backend.model.repository.SubscriptionRepository;
 import com._01Blog.backend.model.repository.UserRepository;
 import com._01Blog.backend.util.Upload;
 
 import jakarta.transaction.Transactional;
 
 import com._01Blog.backend.exception.ExceptionProgram;
+import com._01Blog.backend.mapper.UserMapper;
+
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.aot.hint.annotation.RegisterReflection;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final SubscriptionRepository subscriptionRepository;
 
     public AuthResponse login(LoginDto request) throws ExceptionProgram {
 
@@ -89,5 +100,29 @@ public class UserService {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setToken(token);
         return authResponse;
+    }
+
+    public RegisterDto profile(UUID id, User user) throws ExceptionProgram {
+        Map<String, Object> dataUser = userRepository.findUserData(id);
+        if (dataUser == null || dataUser.size() == 0) {
+            throw new ExceptionProgram(400, "User Not found");
+        }
+        RegisterDto userDto = UserMapper.toDto(dataUser);
+        userDto.setMyAccount(userDto.getId().equals(user.getId()));
+        if (!userDto.isMyAccount()) {
+            boolean isFollowing = subscriptionRepository.isFollowing(user.getId(), (UUID) dataUser.get("id"));
+            userDto.setHasConnect(isFollowing);
+        }
+        return userDto;
+    }
+
+    public List<RegisterDto> searchUsers(String name) {
+        List<User> users = userRepository.searchUsers(name);
+        return users
+                .stream()
+                .map((user) -> {
+                    return UserMapper.toDto(user);
+                }).toList();
+
     }
 }
