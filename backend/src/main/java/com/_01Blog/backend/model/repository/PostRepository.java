@@ -68,14 +68,15 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             JOIN User u ON u.id = p.user
             LEFT JOIN Comment cm ON cm.postId = p.id
             LEFT JOIN Like l ON l.postId = p.id
-            WHERE p.isHidden = false AND (EXISTS(SELECT 1 FROM Subscription WHERE followerId = :userId AND followingId = u.id) OR u.id = :userId)
+            WHERE p.isHidden = false AND u.id = :idUserProfile
             GROUP BY
                 p.id, p.title, p.content, p.createdAt,
                 u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
             ORDER BY p.createdAt DESC
             LIMIT 10 OFFSET :offset
             """)
-    List<Map<String, Object>> getPostsUser(@Param("userId") UUID userId, @Param("offset") int offset);
+    List<Map<String, Object>> getPostsUser(@Param("userId") UUID userId, @Param("offset") int offset,
+            @Param("idUserProfile") UUID idUserProfile);
 
     @Query("""
             SELECT DISTINCT

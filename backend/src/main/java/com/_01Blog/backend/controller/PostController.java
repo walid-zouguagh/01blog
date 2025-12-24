@@ -85,9 +85,10 @@ public class PostController {
     @GetMapping(path = "user_post")
     public ResponseEntity<List<PostDto>> getUserPosts(
             @RequestParam(defaultValue = "0", name = "offset") int offset,
-            @RequestAttribute("user") User currentUser) throws ExceptionProgram {
+            @RequestAttribute("user") User currentUser,
+            @RequestParam(name = "idUserProfile") UUID idUserProfile) throws ExceptionProgram {
 
-        List<PostDto> posts = postService.getPostsUser(currentUser, offset);
+        List<PostDto> posts = postService.getPostsUser(currentUser, offset, idUserProfile);
         return ResponseEntity.ok(posts);
     }
 

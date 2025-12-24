@@ -245,9 +245,9 @@ public class PostService {
                 .toList();
     }
 
-    public List<PostDto> getPostsUser(User currentUser, int offset) {
+    public List<PostDto> getPostsUser(User currentUser, int offset, UUID idUserProfile) {
         UUID userId = currentUser.getId();
-        List<Map<String, Object>> posts = postRepository.getPostsUser(userId, offset);
+        List<Map<String, Object>> posts = postRepository.getPostsUser(userId, offset, idUserProfile);
 
         return posts.stream()
                 .map(post -> {
