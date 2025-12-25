@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com._01Blog.backend.model.entity.User;
-// import com._01Blog.backend.model.enums.MediaType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.NotBlank;
