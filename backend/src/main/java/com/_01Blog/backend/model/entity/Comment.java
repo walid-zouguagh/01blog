@@ -39,11 +39,11 @@ public class Comment {
     
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false) // BIGINT FK → posts.id Related post
-    private Post postId;
+    private Post post;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false) // BIGINT FK → users.id
-    private User userId;
+    private User user;
 
     @Column(name = "content")
     private String content;

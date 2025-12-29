@@ -48,7 +48,7 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_hidden")
-    private Boolean isHidden = false;
+    private boolean isHidden = false;
 
     // THIS IS THE MAGIC: One post → Many medias
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

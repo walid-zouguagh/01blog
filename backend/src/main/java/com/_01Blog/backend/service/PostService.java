@@ -96,7 +96,7 @@ public class PostService {
         Post postUpdated = postRepository.findById(postDto.getId())
                 .orElseThrow(() -> new ExceptionProgram(400, "Post Don't found"));
 
-        if (postDto.getUser().getId() != user.getId() || postUpdated.getIsHidden()) {
+        if (postDto.getUser().getId() != user.getId() || postUpdated.isHidden()) {
             throw new ExceptionProgram(404, "You cannot update this post.");
         }
 
