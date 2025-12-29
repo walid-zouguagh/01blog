@@ -16,4 +16,9 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, UUID
             SELECT EXISTS(SELECT 1 FROM Subscription WHERE follower_id = :userId AND following_id = :dataUser)
                 """)
     boolean isFollowing(@Param("userId") UUID userId, @Param("dataUser") UUID id);
+
+    @Query("""
+            DELETE FROM Subscription s WHERE s.followerId = :userId AND s.followingId = :followingUserId
+            """)
+    void deleteSubscription(@Param("userId") UUID userId, @Param("followingUserId") UUID followingUserId);
 }
