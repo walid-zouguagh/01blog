@@ -12,7 +12,7 @@ import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.repository.LikeRepository;
 import com._01Blog.backend.model.repository.PostRepository;
 
-@Service
+// @Service
 // public class LikeService {
 //     private final LikeRepository likeRepository;
 //     private final PostRepository postRepository;
