@@ -4,11 +4,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.model.entity.Subscription;
 import com._01Blog.backend.model.entity.User;
-import com._01Blog.backend.model.repository.NotificationRepository;
 import com._01Blog.backend.model.repository.SubscriptionRepository;
 import com._01Blog.backend.model.repository.UserRepository;
 
@@ -18,7 +18,8 @@ public class SubscriptionService {
     private UserRepository userRepository;
     // private NotificationService notificationService;
 
-    Map<String, Object> subscription(User user, UUID userId) throws ExceptionProgram {
+    @Transactional
+    public Map<String, Object> subscription(User user, UUID userId) throws ExceptionProgram {
         User followingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ExceptionProgram(400, "user not found"));
 
@@ -42,9 +43,9 @@ public class SubscriptionService {
             subscriptionRepository.save(subscription);
         }
         return Map.of(
-            "isFollowing", isFollowing,
-            "follower", 
-        );
+                "isFollowing", !isFollowing,
+                "follower", subscriptionRepository.countOfFollower(followingUser.getId()),
+                "following", subscriptionRepository.countOfFollowing(followingUser.getId()));
 
     }
 
