@@ -38,15 +38,15 @@ public class Notification {
     @GeneratedValue(generator = "UUID")
     @UuidGenerator
     private UUID id;
-    
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User userId;
-    
+
     @ManyToOne
     @JoinColumn(name = "related_user_id", nullable = false)
     private User relatedUserId;
-    
+
     @ManyToOne
     @JoinColumn(name = "related_post_id", nullable = false)
     private Post relatedPostId;

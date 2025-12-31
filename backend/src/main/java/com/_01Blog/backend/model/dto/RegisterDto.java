@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 import com._01Blog.backend.model.enums.Role;
-import com._01Blog.backend.model.enums.StatusReport;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
