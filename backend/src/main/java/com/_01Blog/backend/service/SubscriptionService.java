@@ -12,7 +12,10 @@ import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.repository.SubscriptionRepository;
 import com._01Blog.backend.model.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class SubscriptionService {
     private SubscriptionRepository subscriptionRepository;
     private UserRepository userRepository;

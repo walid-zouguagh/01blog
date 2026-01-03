@@ -13,32 +13,32 @@ import com._01Blog.backend.model.entity.Subscription;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, UUID> {
 
-        @Query("""
+        @Query(value = """
                         SELECT EXISTS(SELECT 1 FROM Subscription WHERE followerId = :userId AND followingId = :dataUser)
                             """)
         boolean isFollowing(@Param("userId") UUID userId, @Param("dataUser") UUID id);
 
-        @Query("""
+        @Query(value = """
                         DELETE FROM Subscription s WHERE s.followerId = :userId AND s.followingId = :followingUserId
                         """)
         void deleteSubscription(@Param("userId") UUID userId, @Param("followingUserId") UUID followingUserId);
 
-        @Query("""
+        @Query(value = """
                         SELECT COUNT(DISTINCT s.followerId) FROM Subscription s WHERE s.followingId = :userId
                         """)
         int countOfFollower(@Param("userId") UUID userId);
 
-        @Query("""
+        @Query(value = """
                         SELECT COUNT(DISTINCT s.followingId) FROM Subscription s WHERE s.followerId = :userId
                         """)
         int countOfFollowing(@Param("userId") UUID userId);
 
-        @Query("""
+        @Query(value = """
                         SELECT s.followerId FROM Subscription s WHERE s.followingId = :userId LIMIT 10 OFFSET :offset
                         """)
         List<UUID> getFollowers(@Param("userId") UUID userId, @Param("offset") int offset);
 
-        @Query("""
+        @Query(value = """
                         SELECT s.followingId FROM Subscription s WHERE s.followerId = :userId LIMIT 10 OFFSET :offset
                         """)
         List<UUID> getFollowing(@Param("userId") UUID userId, @Param("offset") int offset);

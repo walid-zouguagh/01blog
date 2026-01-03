@@ -31,17 +31,18 @@ public class PostService {
     private final PostRepository postRepository; // ← remove static!
     private final PostMapper postMapper; // ← Spring injects this
     private final PostMediaRepository postMediaRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public PostDto save(PostDto postDto, User user) throws ExceptionProgram {
 
-        // 1. Create post entity
+        // Create post entity
         Post post = new Post();
         post.setUser(user);
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
 
-        // 2. Handle uploaded files
+        // Handle uploaded files
         MultipartFile[] files = postDto.getImages();
 
         if (files != null && files.length > 5) {
@@ -83,10 +84,12 @@ public class PostService {
             }
         }
 
-        // 3. Save post + medias (cascade does the magic)
+        // Save post + medias (cascade does the magic)
         Post savedPost = postRepository.save(post);
 
-        // 4. Return clean DTO
+        // Send Notifications
+        notificationService.setNotification(user, savedPost);
+        // Return clean DTO
         return postMapper.toDto(savedPost);
     }
 

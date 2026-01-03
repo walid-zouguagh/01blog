@@ -41,11 +41,11 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    private User fromUser;
 
     @ManyToOne
     @JoinColumn(name = "related_user_id", nullable = false)
-    private User relatedUserId;
+    private User toUser;
 
     @ManyToOne
     @JoinColumn(name = "related_post_id", nullable = false)

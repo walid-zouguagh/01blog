@@ -3,23 +3,20 @@ package com._01Blog.backend.model.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import lombok.Data;
+public interface NotificationDto {
 
-@Data
-public class NotificationDto {
+    UUID getId();
 
-    private UUID id;
+    UUID getFromUserId();
+    String getFromUserName();
+    String getPhotoUrl();
 
-    private UUID fromUserId;
-    private String fromUserName;
-    private String photoUrl;
+    UUID getToUserId();
+    String getToUserName();
 
-    private UUID toUserId;
-    private String toUserName;
-
-    private UUID postId;
-    private String message;
-    private boolean isRead;
-    private LocalDateTime createAt;
+    UUID getPostId();
+    String getMessage();
+    boolean getIsRead();
+    LocalDateTime getCreateAt();
 
 }
