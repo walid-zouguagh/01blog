@@ -17,7 +17,6 @@ import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.mapper.UserMapper;
 import com._01Blog.backend.model.dto.AuthResponse;
 import com._01Blog.backend.model.dto.LoginDto;
-import com._01Blog.backend.model.dto.PostDto;
 import com._01Blog.backend.model.dto.RegisterDto;
 import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.service.UserService;

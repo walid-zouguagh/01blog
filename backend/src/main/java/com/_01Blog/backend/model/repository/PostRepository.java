@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com._01Blog.backend.model.entity.Post;
 
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
     Optional<Post> findById(UUID id);

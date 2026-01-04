@@ -12,6 +12,7 @@ import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.repository.SubscriptionRepository;
 import com._01Blog.backend.model.repository.UserRepository;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,7 +23,7 @@ public class SubscriptionService {
     // private NotificationService notificationService;
 
     @Transactional
-    public Map<String, Object> subscription(User user, UUID userId) throws ExceptionProgram {
+    public Map<String, Object> subscription(User user, @NonNull UUID userId) throws ExceptionProgram {
         User followingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ExceptionProgram(400, "user not found"));
 

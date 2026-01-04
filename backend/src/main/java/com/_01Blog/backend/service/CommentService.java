@@ -15,6 +15,7 @@ import com._01Blog.backend.model.repository.CommentRepository;
 import com._01Blog.backend.model.repository.PostRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 
 @Service
 public class CommentService {
@@ -47,7 +48,7 @@ public class CommentService {
 
     // Delete Comment
     @Transactional
-    public void deleteComment(User currentUser, UUID commentId) throws ExceptionProgram {
+    public void deleteComment(User currentUser,@NonNull UUID commentId) throws ExceptionProgram {
         
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ExceptionProgram(404, "Comment not found"));

@@ -15,6 +15,7 @@ import com._01Blog.backend.model.repository.PostRepository;
 import com._01Blog.backend.util.Upload;
 
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -151,7 +152,7 @@ public class PostService {
         }
 
         if (postDto.getMedia() != null) {
-            for (MediaDto med : postDto.getMedia()) {
+            for ( MediaDto med : postDto.getMedia()) {
                 postMediaRepository.save(MediaMapper.toEntity(med, postUpdated));
             }
         }

@@ -48,4 +48,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             """)
     List<User> searchUsers(@Param("name") String name);
 
+    @Query(value = """
+            SELECT * FROM User ORDER BY createdAt OFFSET :offset LIMIT :limit
+            """)
+    List<User> findAllUsers(@Param("offset") int offset, @Param("limit") int limit);
+
 }
