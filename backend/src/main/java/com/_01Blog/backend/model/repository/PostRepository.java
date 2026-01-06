@@ -8,14 +8,18 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com._01Blog.backend.model.entity.Post;
 
 
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
-    Optional<Post> findById(UUID id);
+    @Override
+    @NonNull
+    Optional<Post> findById(@NonNull UUID id);
 
     @Query(value = """
             SELECT DISTINCT
@@ -97,5 +101,10 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             ORDER BY p.createdAt DESC
             """)
     Map<String, Object> getPost(@Param("userId") UUID userId, @Param("postId") UUID postId);
+
+    @Query("""
+            UPDATE Post SET isHidden = :isHiden WHERE id = :postId
+            """)
+    void hidePost(@Param("postId") UUID postId, @Param("isHiden") boolean isHidden);
 
 }

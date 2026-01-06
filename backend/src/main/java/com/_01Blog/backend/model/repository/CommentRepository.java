@@ -18,6 +18,8 @@ public interface CommentRepository extends JpaRepository<Comment, UUID>{
                 cm.id,
                 cm.content,
                 cm.createdAt AS createdAt,
+                p.id AS postId,
+
                 u.id AS uid,
                 u.userName AS userName,
                 u.firstName AS firstName,

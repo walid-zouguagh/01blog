@@ -53,4 +53,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             """)
     List<User> findAllUsers(@Param("offset") int offset, @Param("limit") int limit);
 
+
+    @Query("""
+            UPDATE User SET enabled = :isEnabled WHERE id = :userId
+            """)
+    void updateEnabledUser(@Param("userId") UUID userId, @Param("isEnabled") boolean isEnabled);
+
 }

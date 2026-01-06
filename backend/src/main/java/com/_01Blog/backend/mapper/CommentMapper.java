@@ -12,18 +12,11 @@ import com._01Blog.backend.model.dto.RegisterDto;
 import com._01Blog.backend.model.entity.Comment;
 import com._01Blog.backend.model.enums.Role;
 
-//     private UUID id;
-//     private UUID postId;
-//     private RegisterDto user;
-//     @Size(min = 3, max = 100, message = "content must be more than 3")
-//     private String content;
-//     private LocalDateTime createdAt;
-
 @Component
 public class CommentMapper {
     public static CommentDto toDto(Comment comment) {
         if (comment == null) return null;
-        CommentDto commentDto = new CommentDto();
+        CommentDto commentDto = new CommentDto(); 
         commentDto.setId(comment.getId());
         commentDto.setPostId(comment.getPost().getId());
         commentDto.setUser(UserMapper.toDto(comment.getUser()));
@@ -37,8 +30,10 @@ public class CommentMapper {
         if (commentList == null) return null;
 
         return commentList.stream().map((comment) -> {
-            CommentDto commentDto = new CommentDto();
+            
+            CommentDto commentDto = new CommentDto(); 
             commentDto.setId((UUID) comment.get("id"));
+            // commentDto.setPostId((UUID) comment.getPost().getId());
             commentDto.setContent((String) comment.get("content"));
             commentDto.setCreatedAt((LocalDateTime) comment.get("createdAt"));
 

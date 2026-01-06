@@ -3,6 +3,7 @@ package com._01Blog.backend.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com._01Blog.backend.exception.ExceptionProgram;
@@ -15,7 +16,7 @@ import com._01Blog.backend.model.repository.CommentRepository;
 import com._01Blog.backend.model.repository.PostRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
+
 
 @Service
 public class CommentService {
@@ -24,7 +25,7 @@ public class CommentService {
     private PostRepository postRepository;
 
     public CommentDto createComment(CommentDto commentDto, User user) throws ExceptionProgram {
-        Post post = postRepository.findById(commentDto.getPostId())
+        Post post = postRepository.findById( commentDto.getPostId())
                 .orElseThrow(() -> new ExceptionProgram(400, "post not found"));
         
         if (post.isHidden()) {
@@ -37,8 +38,6 @@ public class CommentService {
         comment.setPost(post);
         commentRepository.save(comment);
         return CommentMapper.toDto(comment);
-
-        
     }
 
     //Get Comments

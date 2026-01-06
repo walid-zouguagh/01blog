@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.mapper.UserMapper;
 import com._01Blog.backend.model.dto.RegisterDto;
+import com._01Blog.backend.model.entity.Post;
 import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.enums.Role;
+import com._01Blog.backend.model.repository.PostRepository;
 import com._01Blog.backend.model.repository.UserRepository;
 
 import lombok.NonNull;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminService {
     public final UserRepository userRepository;
+    public final PostRepository postRepository;
 
     // Get All Users for Admin
     public List<RegisterDto> getUsers(int offset, int limit) {
@@ -38,5 +41,28 @@ public class AdminService {
         }
         // userRepository.deleteById(userId); // two methods correct
         userRepository.delete(user);
+    }
+
+    // Banne User by Admin
+    @Transactional
+    public boolean banneUser(@NonNull UUID userId) throws ExceptionProgram {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ExceptionProgram(400, "this user not found"));
+        if (user.getRole().equals(Role.ADMIN)) {
+            throw new ExceptionProgram(400, "you can't banned Admin");
+        }
+
+        userRepository.updateEnabledUser(userId, user.getEnabled().equals(true) ? false : true);
+        // user = userRepository.findById(userId).orElseThrow(() -> new ExceptionProgram(400, "this user not found"));
+        // return !user.getEnabled().equals(false);
+        return user.isEnabled();
+    }
+
+    // hide post by admin 
+    @Transactional
+    public boolean hidePost(@NonNull UUID postId) throws ExceptionProgram {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ExceptionProgram(400, "not found this post"));
+        // postRepository.hidePost(postId, post.isHidden() ? false : true);
+        postRepository.hidePost(postId, !post.isHidden());
+        return !post.isHidden();
     }
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +44,8 @@ public class CommentController {
 
     // create comment
     @PostMapping(path = "create_comment")
-    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto commentDto,
+    public ResponseEntity<CommentDto> createComment(
+            @Valid @RequestBody CommentDto commentDto,
             @RequestAttribute("user") User user) throws ExceptionProgram {
         return ResponseEntity.ok(commentService.createComment(commentDto, user));
     }
@@ -51,7 +53,7 @@ public class CommentController {
     // delete comment
     @DeleteMapping("/comments/{commentId}")  // ← Use DELETE, not POST!
     public ResponseEntity<?> deleteComment(
-        @PathVariable UUID commentId,
+        @NonNull @PathVariable UUID commentId,
         @RequestAttribute("user") User currentUser) throws ExceptionProgram {
 
         commentService.deleteComment(currentUser, commentId);
