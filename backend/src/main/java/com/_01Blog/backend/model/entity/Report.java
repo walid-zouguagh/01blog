@@ -59,7 +59,7 @@ public class Report {
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private TypeReport type;
+    private TypeReport type; // USER, POST
 
     @Column(name = "reason", nullable = false, length = 500)
     private String reason;
@@ -69,7 +69,7 @@ public class Report {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private StatusReport status;
+    private StatusReport status; // PENDING, RESOLVED, DISMISSED
 
     @PrePersist
     protected void onCreate() {

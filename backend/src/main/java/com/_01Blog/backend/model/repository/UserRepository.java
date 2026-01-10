@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.hibernate.query.Page;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,26 +39,25 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                     GROUP BY followingId
                 ) flwer ON flwer.followingId = u.id
                 WHERE u.id = :id
-            """)
+            """, nativeQuery = true)
     Map<String, Object> findUserData(@Param("id") UUID id);
 
-    @Query(value = """
-            SELECT u FROM User AS user
-            WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :name, '%'))
-            OR LOWER(CONCAT(u.firstName, " ", u.lastName)) LIKE LOWER (CONCAT('%', :name, '%'))
-            OR LOWER(CONCAT(u.lastName, " ", u.firstName)) LIKE LOWER (CONCAT('%', :name, '%'))
+    @Query("""
+                SELECT u FROM User u
+                WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :name, '%'))
+                OR LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :name, '%'))
+                OR LOWER(CONCAT(u.lastName, ' ', u.firstName)) LIKE LOWER(CONCAT('%', :name, '%'))
             """)
     List<User> searchUsers(@Param("name") String name);
 
     @Query(value = """
             SELECT * FROM User ORDER BY createdAt OFFSET :offset LIMIT :limit
-            """)
+            """, nativeQuery = true)
     List<User> findAllUsers(@Param("offset") int offset, @Param("limit") int limit);
 
-
-    @Query("""
+    @Query(value = """
             UPDATE User SET enabled = :isEnabled WHERE id = :userId
-            """)
+            """, nativeQuery = true)
     void updateEnabledUser(@Param("userId") UUID userId, @Param("isEnabled") boolean isEnabled);
 
 }

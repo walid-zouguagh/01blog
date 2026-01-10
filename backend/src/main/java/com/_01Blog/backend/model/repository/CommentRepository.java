@@ -36,7 +36,7 @@ public interface CommentRepository extends JpaRepository<Comment, UUID>{
                     u.id, u.userName, u.firstName, u.lastName, u.role
                 ORDER BY cm.createdAt DESC
                 LIMIT 10 OFFSET :offset
-            """)
+            """, nativeQuery = true)
     List<Map<String, Object>> getComments(@Param("postId") UUID postId, @Param("userId") UUID userId, @Param("offset") int offset);
 
 }

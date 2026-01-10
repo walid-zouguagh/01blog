@@ -33,26 +33,26 @@ public interface NotificationRepository extends JpaRepository<Notification, UUID
             JOIN User u2 ON u2.id = n.toUser
             WHERE n.toUser = :userId
             ORDER BY n.createdAt DESC
-            """)
+            """, nativeQuery = true)
     List<NotificationDto> getAllNotifications(@Param("userId") UUID userId);
 
 
     @Query(value = """
             SELECT COUNT(*) FROM Notification WHERE isRead = false AND toUser = :userId
-            """)
+            """, nativeQuery = true)
     int countNotification(@Param("userId") UUID userId);
 
     @Modifying
     @Transactional
     @Query(value = """
             UPDATE Notification SET isRead = true WHERE id = :notifId
-            """)
+            """, nativeQuery = true)
     void updateRead(@Param("notifId") UUID notifId);
 
     @Modifying
     @Transactional
     @Query(value = """
             UPDATE Notification SET isRead = true WHERE toUser = :userId
-            """)
+            """, nativeQuery = true)
     void updateAll(@Param("userId") UUID userId);
 }

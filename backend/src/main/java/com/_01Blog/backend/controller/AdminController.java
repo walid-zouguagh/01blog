@@ -14,15 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com._01Blog.backend.exception.ExceptionProgram;
 import com._01Blog.backend.model.dto.RegisterDto;
+import com._01Blog.backend.model.enums.TypeReport;
 import com._01Blog.backend.service.AdminService;
+import com._01Blog.backend.service.ReportService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "admin")
+@RequestMapping(path = "/admin")
 public class AdminController {
     public final AdminService adminService;
+    public final ReportService reportService;
 
     // Get All Users for Admin
     @GetMapping(path = "/get-users")
@@ -56,6 +59,39 @@ public class AdminController {
         @RequestParam("postId") UUID postId
     ) throws ExceptionProgram{
         return adminService.hidePost(postId);
+    }
+
+    // get Reported : Report User | Post
+    @GetMapping(path = "/reported")
+    public List<Map<String, Object>> getReported(@RequestParam(name = "type") TypeReport type) throws ExceptionProgram {
+        if (type.equals(TypeReport.USER)) {
+            return reportService.getReportedUser();
+        }else if (type.equals(TypeReport.POST)) {
+            return reportService.getReportedPost();
+        }
+        return null;
+    }
+
+    // get Reason Reported
+    @GetMapping(path = "/reason/user")
+    public List<Map<String, Object>> getReasonReportedUser(
+        @RequestParam(name = "userId") UUID userId
+    ) throws ExceptionProgram{
+        return reportService.getReasonReportedUser(userId);
+    }
+
+    // get Reason Post
+    @GetMapping(path = "/reason/post")
+    public List<Map<String, Object>> getReasonReportedPost(
+        @RequestParam(name = "postId") UUID postId
+    ) throws ExceptionProgram{
+        return reportService.getReasonReportedPost(postId);
+    }
+
+    // Dashboard
+    @GetMapping(path = "/dashboard")
+    public Map<String, Object> dashboard() {
+        return adminService.dashboard();
     }
 
 }
