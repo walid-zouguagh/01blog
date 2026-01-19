@@ -1,0 +1,90 @@
+.post-details-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.post-card {
+    margin-bottom: 24px;
+}
+
+.post-avatar {
+    background-size: cover;
+    background-position: center;
+    background-color: #ddd;
+}
+
+img[mat-card-image] {
+    object-fit: cover;
+    max-height: 500px;
+    width: 100%;
+}
+
+.comments-section {
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.comments-section h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.comment-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: #ddd;
+    flex-shrink: 0;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+}
+
+.username {
+    font-weight: 600;
+    color: #333;
+}
+
+.date {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.comment-content p {
+    margin: 0;
+    line-height: 1.4;
+    color: #444;
+}
+
+.no-comments {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+}

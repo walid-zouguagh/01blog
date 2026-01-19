@@ -1,0 +1,49 @@
+<mat-card class="post-card glass-panel">
+    <mat-card-header>
+        <div mat-card-avatar class="post-avatar"
+            [style.background-image]="'url(' + (post.user.profilePicture || 'assets/avatar-placeholder.png') + ')'"
+            (click)="$event.stopPropagation();">
+            <!-- Navigate to profile later? -->
+        </div>
+        <mat-card-title (click)="viewDetails()" class="clickable">{{ post.user.username }}</mat-card-title>
+        <mat-card-subtitle>{{ post.createdAt | date:'medium' }}</mat-card-subtitle>
+        <span class="spacer"></span>
+        <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngIf="isOwner()" (click)="deletePost()">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+            </button>
+            <button mat-menu-item (click)="openReportDialog()">
+                <mat-icon>flag</mat-icon>
+                <span>Report</span>
+            </button>
+        </mat-menu>
+    </mat-card-header>
+
+    <mat-card-content (click)="viewDetails()" class="clickable">
+        <!-- Handle different content fields -->
+        <p>{{ post.content || post.description }}</p>
+    </mat-card-content>
+
+    <img mat-card-image *ngIf="post.urlMedia && post.typeMedia === 'IMAGE'" [src]="post.urlMedia" alt="Post image"
+        (click)="viewDetails()" class="clickable">
+    <video mat-card-image *ngIf="post.urlMedia && post.typeMedia === 'VIDEO'" [src]="post.urlMedia" controls></video>
+
+    <mat-card-actions align="start">
+        <button mat-button (click)="$event.stopPropagation(); toggleLike()" [color]="liked() ? 'accent' : ''">
+            <mat-icon>{{ liked() ? 'favorite' : 'favorite_border' }}</mat-icon>
+            {{ likeCount() }}
+        </button>
+        <button mat-button (click)="$event.stopPropagation(); viewDetails()">
+            <mat-icon>comment</mat-icon>
+            {{ post.nbrOfComments || 0 }}
+        </button>
+        <span class="spacer"></span>
+        <button mat-icon-button (click)="$event.stopPropagation()">
+            <mat-icon>share</mat-icon>
+        </button>
+    </mat-card-actions>
+</mat-card>

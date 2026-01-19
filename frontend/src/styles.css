@@ -1,0 +1,139 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Rich Color Palette */
+    --primary-color: #6C63FF; /* Vibrant Purple */
+    --primary-dark: #5a52d5;
+    --accent-color: #00f2ff; /* Cyan Neon */
+    --accent-warm: #ff2a6d; /* Warm Pink */
+    
+    --bg-dark-1: #0f0c29;
+    --bg-dark-2: #302b63;
+    --bg-dark-3: #24243e;
+    
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+
+    /* Glass Effects */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg-hover: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-blur: blur(20px);
+
+    /* Spacing & Layout */
+    --border-radius-lg: 24px;
+    --border-radius-md: 16px;
+    --border-radius-sm: 8px;
+    
+    --transition-speed: 0.3s;
+}
+
+/* Global Reset & Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 50%, var(--bg-dark-3) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+p {
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+a:hover {
+    color: #fff;
+    text-shadow: 0 0 10px var(--accent-color);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--glass-shadow);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-md);
+    padding: 24px;
+    transition: all var(--transition-speed) ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    background: var(--glass-bg-hover);
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 40px rgba(0, 242, 255, 0.1);
+}
+
+/* Container Utility */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Angular Material Overrides for Dark Theme */
+.mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-outlined-button {
+    border-radius: 50px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.mat-mdc-form-field-outline {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}

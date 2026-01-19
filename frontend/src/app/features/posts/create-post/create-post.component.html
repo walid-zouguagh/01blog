@@ -1,0 +1,43 @@
+<div class="create-post-container">
+    <div class="glass-panel post-form-card">
+        <h2>{{ isEditing() ? 'Edit Post' : 'Create New Post' }}</h2>
+
+        <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title" placeholder="Give your post a title">
+                <mat-error *ngIf="postForm.get('title')?.hasError('required')">Title is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Content</mat-label>
+                <textarea matInput formControlName="content" placeholder="Share your learning journey..."
+                    rows="5"></textarea>
+                <mat-error *ngIf="postForm.get('content')?.hasError('required')">Content is required</mat-error>
+            </mat-form-field>
+
+            <div class="media-upload-section">
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,video/*" hidden>
+                <button type="button" mat-stroked-button (click)="fileInput.click()">
+                    <mat-icon>add_photo_alternate</mat-icon> {{ isEditing() ? 'Change Media' : 'Add Media' }}
+                </button>
+
+                <div *ngIf="selectedFile || (isEditing() && previewUrl)" class="file-preview">
+                    <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+                    <img *ngIf="mediaType === 'IMAGE' && previewUrl" [src]="previewUrl" class="preview-media">
+                    <video *ngIf="mediaType === 'VIDEO' && previewUrl" [src]="previewUrl" controls
+                        class="preview-media"></video>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button mat-flat-button color="primary" type="submit" [disabled]="postForm.invalid || isSubmitting()"
+                    style="width: 100%; margin-top: 16px;">
+                    <mat-icon>send</mat-icon> {{ isSubmitting() ? 'Processing...' : (isEditing() ? 'Update Post' :
+                    'Publish Post') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

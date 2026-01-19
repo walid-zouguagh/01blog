@@ -1,0 +1,72 @@
+.post-card {
+    margin-bottom: 24px;
+    /* Background handled by glass-panel utility */
+    background: transparent !important;
+    border: none;
+    overflow: hidden;
+}
+
+.post-card mat-card-header {
+    margin-bottom: 12px;
+}
+
+.post-card mat-card-title {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.post-card mat-card-subtitle {
+    color: var(--text-secondary);
+}
+
+.post-card .post-avatar {
+    background-size: cover;
+    background-position: center;
+    background-color: var(--glass-bg-hover);
+    border: 2px solid var(--primary-color);
+}
+
+.post-card mat-card-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    /* Fix text color for dark mode */
+    margin-bottom: 16px;
+    padding: 0 16px;
+}
+
+.post-card img[mat-card-image],
+.post-card video[mat-card-image] {
+    object-fit: cover;
+    max-height: 500px;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 16px;
+    border-radius: 4px;
+}
+
+.post-card mat-card-actions {
+    padding: 8px 16px 16px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.clickable {
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.clickable:hover {
+    opacity: 0.9;
+}
+
+/* Icons color override */
+.mat-icon {
+    color: var(--text-secondary);
+}
+
+button[color="accent"] .mat-icon {
+    color: var(--accent-warm);
+}

@@ -1,0 +1,56 @@
+<mat-toolbar color="primary" class="glass-toolbar">
+    <span class="logo" routerLink="/">01Blog</span>
+    <span class="spacer"></span>
+
+    <ng-container *ngIf="auth.currentUser(); else loginLinks">
+        <a mat-button routerLink="/feed" routerLinkActive="active-link">Feed</a>
+        <a mat-button routerLink="/create-post" routerLinkActive="active-link">Create Post</a>
+
+        <!-- Notifications -->
+        <button mat-icon-button [matMenuTriggerFor]="notifMenu">
+            <mat-icon [matBadge]="unreadCount()" [matBadgeHidden]="unreadCount() === 0"
+                matBadgeColor="warn">notifications</mat-icon>
+        </button>
+        <mat-menu #notifMenu="matMenu" class="notif-menu">
+            <div class="notif-header">
+                <span>Notifications</span>
+                <button mat-button (click)="markAllAsRead()">Mark all read</button>
+            </div>
+            <div class="notif-list">
+                @for (n of notifications(); track n.id) {
+                <button mat-menu-item (click)="markAsRead(n.id)" [class.unread]="!n.read">
+                    <span>{{n.description}}</span>
+                </button>
+                } @empty {
+                <div class="empty-notif">No notifications</div>
+                }
+            </div>
+        </mat-menu>
+
+        <!-- User Menu -->
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+            <div class="user-avatar"
+                [style.background-image]="'url(' + (auth.currentUser()?.urlProfileImage || 'assets/avatar-placeholder.png') + ')'">
+            </div>
+        </button>
+        <mat-menu #userMenu="matMenu">
+            <button mat-menu-item [routerLink]="['/profile']">
+                <mat-icon>person</mat-icon>
+                <span>Profile</span>
+            </button>
+            <button mat-menu-item *ngIf="auth.currentUser()?.role === 'ADMIN'" routerLink="/admin">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>Admin Dashboard</span>
+            </button>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+    </ng-container>
+
+    <ng-template #loginLinks>
+        <a mat-button routerLink="/login">Login</a>
+        <a mat-raised-button color="accent" routerLink="/register">Register</a>
+    </ng-template>
+</mat-toolbar>

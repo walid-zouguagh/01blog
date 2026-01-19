@@ -5,11 +5,11 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-// @RequestMapping("/auth")
+@RequestMapping("/auth")
 public class UserController {
 
     private final UserService userService;
@@ -37,26 +37,26 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<AuthResponse> register(@ModelAttribute RegisterDto request) throws ExceptionProgram {
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterDto request) throws ExceptionProgram {
         AuthResponse response = userService.register(request);
         return ResponseEntity.ok(response);
 
     }
 
-    @GetMapping(path = "api/forme")
+    @GetMapping(path = "/forme")
     public RegisterDto forMeDto(@RequestAttribute("user") User user) {
         return UserMapper.toDto(user);
     }
 
     // Get Profile
-    @GetMapping(path = "api/profile/{id}")
+    @GetMapping(path = "/profile/{id}")
     public RegisterDto profile(
             @RequestAttribute("user") User user,
             @PathVariable("id") UUID id) throws ExceptionProgram {
         return userService.profile(id, user);
     }
 
-    @GetMapping(path = "api/search")
+    @GetMapping(path = "/search")
     public List<RegisterDto> searchUsers(@RequestParam("name") String name) {
         return userService.searchUsers(name);
     }

@@ -15,94 +15,94 @@ import com._01Blog.backend.model.entity.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
-        @Override
-        @NonNull
-        Optional<Post> findById(@NonNull UUID id);
+    @Override
+    @NonNull
+    Optional<Post> findById(@NonNull UUID id);
 
-        @Query(value = """
-                        SELECT DISTINCT
-                        p.id, p.title, p.content, p.isHidden as IsHide, p.createdAt,
-                        u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        COUNT(DISTINCT cm.id) AS totalComments,
-                        COUNT(DISTINCT l.id) AS totalLikes,
-                        EXISTS(SELECT 1 FROM Like l2 WHERE l2.postId = p.id AND l2.userId = :userId) AS isLiked
-                        FROM Post p
-                        JOIN User u ON p.user = u.id
-                        LEFT JOIN Comment cm ON cm.postId = p.id
-                        LEFT JOIN Like l ON l.postId = p.id
-                        WHERE p.isHidden = false
-                        GROUP BY
-                            p.id, p.title, p.content, p.createdAt,
-                            u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        ORDER BY p.createdAt DESC
-                        LIMIT 10 OFFSET :offset
-                        """, nativeQuery = true)
+    @Query(value = """
+            SELECT DISTINCT
+            p.id, p.title, p.content, p.is_hidden as IsHide, p.created_at,
+            u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
+            COUNT(DISTINCT cm.id) AS totalComments,
+            COUNT(DISTINCT l.id) AS totalLikes,
+            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM post p
+            JOIN user u ON p.user_id = u.id
+            LEFT JOIN comment cm ON cm.post_id = p.id
+            LEFT JOIN like l ON l.post_id = p.id
+            WHERE p.is_hidden = false
+            GROUP BY
+                p.id, p.title, p.content, p.created_at,
+                u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role
+            ORDER BY p.created_at DESC
+            LIMIT 10 OFFSET :offset
+            """, nativeQuery = true)
 
-        List<Map<String, Object>> getPosts(@Param("userId") UUID userId, @Param("offset") int offset);
+    List<Map<String, Object>> getPosts(@Param("userId") UUID userId, @Param("offset") int offset);
 
-        @Query(value = """
-                        SELECT DISTINCT
-                        p.id, p.title, p.content, p.isHidden AS IsHide, p.createdAt,
-                        u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        COUNT(DISTINCT cm.id) AS totalComments,
-                        COUNT(DISTINCT l.id) AS totalLikes,
-                        EXISTS(SELECT 1 FROM Like l2 WHERE l2.postId = p.id AND l2.userId = :userId) AS isLiked
-                        FROM Post p
-                        JOIN User u ON u.id = p.user
-                        LEFT JOIN Comment cm ON cm.postId = p.id
-                        LEFT JOIN Like l ON l.postId = p.id
-                        WHERE p.isHidden = false AND (EXISTS(SELECT 1 FROM Subscription WHERE followerId = :userId AND followingId = u.id) OR u.id = :userId)
-                        GROUP BY
-                            p.id, p.title, p.content, p.createdAt,
-                            u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        ORDER BY p.createdAt DESC
-                        LIMIT 10 OFFSET :offset
-                        """, nativeQuery = true)
-        List<Map<String, Object>> getSubscribePosts(@Param("userId") UUID userId, @Param("offset") int offset);
+    @Query(value = """
+            SELECT DISTINCT
+            p.id, p.title, p.content, p.is_hidden AS IsHide, p.created_at,
+            u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
+            COUNT(DISTINCT cm.id) AS totalComments,
+            COUNT(DISTINCT l.id) AS totalLikes,
+            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM post p
+            JOIN user u ON u.id = p.user_id
+            LEFT JOIN comment cm ON cm.post_id = p.id
+            LEFT JOIN like l ON l.post_id = p.id
+            WHERE p.is_hidden = false AND (EXISTS(SELECT 1 FROM subscription WHERE follower_id = :userId AND following_id = u.id) OR u.id = :userId)
+            GROUP BY
+                p.id, p.title, p.content, p.created_at,
+                u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role
+            ORDER BY p.created_at DESC
+            LIMIT 10 OFFSET :offset
+            """, nativeQuery = true)
+    List<Map<String, Object>> getSubscribePosts(@Param("userId") UUID userId, @Param("offset") int offset);
 
-        @Query(value = """
-                        SELECT DISTINCT
-                        p.id, p.title, p.content, p.isHidden AS IsHide, p.createdAt,
-                        u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        COUNT(DISTINCT cm.id) AS totalComments,
-                        COUNT(DISTINCT l.id) AS totalLikes,
-                        EXISTS(SELECT 1 FROM Like l2 WHERE l2.postId = p.id AND l2.userId = :userId) AS isLiked
-                        FROM Post p
-                        JOIN User u ON u.id = p.user
-                        LEFT JOIN Comment cm ON cm.postId = p.id
-                        LEFT JOIN Like l ON l.postId = p.id
-                        WHERE p.isHidden = false AND u.id = :idUserProfile
-                        GROUP BY
-                            p.id, p.title, p.content, p.createdAt,
-                            u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        ORDER BY p.createdAt DESC
-                        LIMIT 10 OFFSET :offset
-                        """, nativeQuery = true)
-        List<Map<String, Object>> getPostsUser(@Param("userId") UUID userId, @Param("offset") int offset,
-                        @Param("idUserProfile") UUID idUserProfile);
+    @Query(value = """
+            SELECT DISTINCT
+            p.id, p.title, p.content, p.is_hidden AS IsHide, p.created_at,
+            u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
+            COUNT(DISTINCT cm.id) AS totalComments,
+            COUNT(DISTINCT l.id) AS totalLikes,
+            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM post p
+            JOIN user u ON u.id = p.user_id
+            LEFT JOIN comment cm ON cm.post_id = p.id
+            LEFT JOIN like l ON l.post_id = p.id
+            WHERE p.is_hidden = false AND u.id = :idUserProfile
+            GROUP BY
+                p.id, p.title, p.content, p.created_at,
+                u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
+            ORDER BY p.created_at DESC
+            LIMIT 10 OFFSET :offset
+            """, nativeQuery = true)
+    List<Map<String, Object>> getPostsUser(@Param("userId") UUID userId, @Param("offset") int offset,
+            @Param("idUserProfile") UUID idUserProfile);
 
-        @Query(value = """
-                        SELECT DISTINCT
-                        p.id, p.title, p.content, p.isHidden AS IsHide, p.createdAt,
-                        u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        COUNT(DISTINCT cm.id) AS totalComments,
-                        COUNT(DISTINCT l.id) AS totalLikes,
-                        EXISTS(SELECT 1 FROM Like l2 WHERE l2.postId = p.id AND l2.userId = :userId) AS isLiked
-                        FROM Post p
-                        JOIN User u ON u.id = p.user
-                        LEFT JOIN Comment cm ON cm.postId = p.id
-                        LEFT JOIN Like l ON l.postId = p.id
-                        WHERE p.isHidden = false AND p.id = :postId
-                        GROUP BY
-                            p.id, p.title, p.content, p.createdAt,
-                            u.id, u.userName, u.firstName, u.lastName, u.profileImage, u.role,
-                        ORDER BY p.createdAt DESC
-                        """, nativeQuery = true)
-        Map<String, Object> getPost(@Param("userId") UUID userId, @Param("postId") UUID postId);
+    @Query(value = """
+            SELECT DISTINCT
+            p.id, p.title, p.content, p.is_hidden AS IsHide, p.created_at,
+            u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
+            COUNT(DISTINCT cm.id) AS totalComments,
+            COUNT(DISTINCT l.id) AS totalLikes,
+            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM post p
+            JOIN user u ON u.id = p.user_id
+            LEFT JOIN comment cm ON cm.post_id = p.id
+            LEFT JOIN like l ON l.post_id = p.id
+            WHERE p.is_hidden = false AND p.id = :postId
+            GROUP BY
+                p.id, p.title, p.content, p.created_at,
+                u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
+            ORDER BY p.created_at DESC
+            """, nativeQuery = true)
+    Map<String, Object> getPost(@Param("userId") UUID userId, @Param("postId") UUID postId);
 
-        @Query(value = """
-                        UPDATE Post SET isHidden = :isHiden WHERE id = :postId
-                        """, nativeQuery = true)
-        void hidePost(@Param("postId") UUID postId, @Param("isHiden") boolean isHidden);
+    @Query(value = """
+            UPDATE post SET is_hidden = :isHiden WHERE id = :postId
+            """, nativeQuery = true)
+    void hidePost(@Param("postId") UUID postId, @Param("isHiden") boolean isHidden);
 
 }

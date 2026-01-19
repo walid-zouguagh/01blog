@@ -35,7 +35,7 @@ import lombok.NoArgsConstructor;
 // enabled	BOOLEAN DEFAULT TRUE	Account active
 // created_at	TIMESTAMP DEFAULT NOW()	Registration date
 
-@Table(name = "users")
+@Table(name = "user")
 @Entity
 @Data
 @AllArgsConstructor

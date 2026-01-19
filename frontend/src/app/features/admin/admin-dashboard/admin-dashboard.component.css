@@ -1,0 +1,25 @@
+.admin-container {
+    padding: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: 80vh;
+}
+
+h1 {
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+table {
+    width: 100%;
+    background: transparent;
+}
+
+tr.mat-row:hover {
+    background: rgba(0, 0, 0, 0.04);
+}

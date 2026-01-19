@@ -1,0 +1,61 @@
+<div class="post-details-container" *ngIf="post() as p">
+    <mat-card class="post-card glass-panel">
+        <mat-card-header>
+            <div mat-card-avatar class="post-avatar"
+                [style.background-image]="'url(' + (p.user.profilePicture || 'assets/avatar-placeholder.png') + ')'">
+            </div>
+            <mat-card-title>{{ p.user.username }}</mat-card-title>
+            <mat-card-subtitle>{{ p.createdAt | date:'medium' }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <h2>{{ p.title }}</h2>
+            <p>{{ p.content || p.description }}</p>
+        </mat-card-content>
+
+        <img mat-card-image *ngIf="p.urlMedia && p.typeMedia === 'IMAGE'" [src]="p.urlMedia" alt="Post image">
+        <!-- Also handle media list if backend implemented it -->
+
+        <mat-card-actions>
+            <button mat-button>
+                <mat-icon>favorite_border</mat-icon> {{ p.nbrOfLike || 0 }}
+            </button>
+            <button mat-button>
+                <mat-icon>comment</mat-icon> {{ p.nbrOfComments || 0 }}
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+    <div class="comments-section glass-panel">
+        <h3>Comments</h3>
+
+        <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="comment-form">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Add a comment...</mat-label>
+                <textarea matInput formControlName="content" rows="2"></textarea>
+                <button mat-icon-button matSuffix type="submit" [disabled]="commentForm.invalid" color="primary">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </mat-form-field>
+        </form>
+
+        <div class="comments-list">
+            @for (comment of comments(); track comment.id) {
+            <div class="comment-item">
+                <div class="comment-avatar"
+                    [style.background-image]="'url(' + (comment.user.urlProfileImage || 'assets/avatar-placeholder.png') + ')'">
+                </div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="username">{{ comment.user.userName }}</span>
+                        <span class="date">{{ comment.createdAt | date:'short' }}</span>
+                    </div>
+                    <p>{{ comment.content }}</p>
+                </div>
+            </div>
+            } @empty {
+            <p class="no-comments">No comments yet. Be the first!</p>
+            }
+        </div>
+    </div>
+</div>

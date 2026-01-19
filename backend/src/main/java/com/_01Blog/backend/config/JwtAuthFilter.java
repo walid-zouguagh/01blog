@@ -27,10 +27,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        System.out.println("DEBUG: Checking shouldNotFilter for URI: " + request.getRequestURI());
+        boolean shouldSkip = request.getRequestURI().startsWith("/auth/");
+        System.out.println("DEBUG: shouldNotFilter result: " + shouldSkip);
+        return shouldSkip;
+    }
+
+    @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("DEBUG: Executing doFilterInternal for URI: " + request.getRequestURI());
 
         String header = request.getHeader("Authorization");
 
