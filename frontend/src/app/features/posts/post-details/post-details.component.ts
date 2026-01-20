@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService, Post } from '../services/post.service';
+import { LikeService } from '../services/like.service';
 import { CommentService, CommentDto } from '../../comments/services/comment.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MatCardModule } from '@angular/material/card';
@@ -30,6 +31,7 @@ export class PostDetailsComponent {
     private router = inject(Router);
     private postService = inject(PostService);
     private commentService = inject(CommentService);
+    private likeService = inject(LikeService);
     public auth = inject(AuthService);
     private fb = inject(FormBuilder);
 
@@ -64,6 +66,26 @@ export class PostDetailsComponent {
         this.commentService.getComments(postId).subscribe({
             next: (data) => this.comments.set(data),
             error: (err) => console.error(err)
+        });
+    }
+
+    toggleLike() {
+        const p = this.post();
+        if (!p) return;
+
+        // Optimistic update
+        const wasLiked = p.isLiked;
+        const newCount = wasLiked ? p.nbrOfLike - 1 : p.nbrOfLike + 1;
+
+        this.post.update(current => current ? { ...current, isLiked: !wasLiked, nbrOfLike: newCount } : null);
+
+        this.likeService.like(p.id).subscribe({
+            // Backend returns updated state if needed, or just success
+            error: (err) => {
+                console.error(err);
+                // Revert if error
+                this.post.update(current => current ? { ...current, isLiked: wasLiked, nbrOfLike: p.nbrOfLike } : null);
+            }
         });
     }
 

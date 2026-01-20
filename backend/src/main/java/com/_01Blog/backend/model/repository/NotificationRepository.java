@@ -28,9 +28,9 @@ public interface NotificationRepository extends JpaRepository<Notification, UUID
                             u1.profile_image AS photoUrl,
                             u2.id AS toUserId,
                             u2.user_name AS toUserName,
-                        FROM notification n
-                        JOIN user u1 ON u1.id = n.user_id
-                        JOIN user u2 ON u2.id = n.related_user_id
+                        FROM notifications n
+                        JOIN users u1 ON u1.id = n.user_id
+                        JOIN users u2 ON u2.id = n.related_user_id
                         WHERE n.related_user_id = :userId
                         ORDER BY n.created_at DESC
                         """, nativeQuery = true)

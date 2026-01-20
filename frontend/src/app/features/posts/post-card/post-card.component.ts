@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Post, PostService } from '../services/post.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { LikeService } from '../services/like.service';
 import { ReportDialogComponent } from '../../reports/report-dialog/report-dialog.component';
 
 @Component({
@@ -27,6 +28,7 @@ export class PostCardComponent {
     private dialog = inject(MatDialog);
     private router = inject(Router);
     private postService = inject(PostService);
+    private likeService = inject(LikeService);
     public auth = inject(AuthService);
 
     ngOnInit() {
@@ -42,9 +44,17 @@ export class PostCardComponent {
     }
 
     toggleLike() {
+        // Optimistic update
         this.liked.update(v => !v);
         this.likeCount.update(c => this.liked() ? c + 1 : c - 1);
-        // Call service to like/unlike (backend implementation required)
+
+        this.likeService.like(this.post.id).subscribe({
+            error: (err) => {
+                // Revert
+                this.liked.update(v => !v);
+                this.likeCount.update(c => this.liked() ? c + 1 : c - 1);
+            }
+        });
     }
 
     viewDetails() {

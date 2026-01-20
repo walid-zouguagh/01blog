@@ -28,8 +28,8 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
                 u.enabled AS enabled,
                 COUNT(r.id) AS countReport,
                 MAX(r.created_at) AS lastReport
-            FROM report r
-            JOIN user u ON u.id = r.reported_user_id
+            FROM reports r
+            JOIN users u ON u.id = r.reported_user_id
             WHERE r.reported_post_id IS NULL
             GROUP BY
                 r.reported_user_id,
@@ -53,9 +53,9 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
                 p.is_hidden AS hidden,
                 COUNT(r.id) AS countReported,
                 MAX(r.created_at) AS lastReport
-            FROM report r
-            JOIN post p ON p.id = r.reported_post_id
-            JOIN user u ON u.id = p.user_id
+            FROM reports r
+            JOIN posts p ON p.id = r.reported_post_id
+            JOIN users u ON u.id = p.user_id
             WHERE r.reported_user_id IS NULL
             GROUP BY
                 r.reported_post_id
@@ -73,9 +73,9 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
                 r.created_at AS createdAt,
                 u1.user_name AS username,
                 u1.profile_image AS profileImage
-            FROM report r
-            JOIN user u1 ON u1.id = r.reporter_id
-            JOIN user u2 ON u2.id = r.reported_user_id
+            FROM reports r
+            JOIN users u1 ON u1.id = r.reporter_id
+            JOIN users u2 ON u2.id = r.reported_user_id
             WHERE u2.id = :userId
             GROUP BY r.id , r.reason , r.created_at , u1.user_name , u1.profile_image
             ORDER BY MAX(r.created_at) DESC
@@ -88,23 +88,23 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
                 r.id AS id,
                 r.reason AS reason,
                 r.created_at AS createdAt,
-                u1.user_name AS username,
-                u1.profile_image AS profileImage
-            FROM report r
-            JOIN user u ON u.id = r.reporter_id
+                u.user_name AS username,
+                u.profile_image AS profileImage
+            FROM reports r
+            JOIN users u ON u.id = r.reporter_id
             WHERE r.reported_post_id = :postId
-            GROUP BY r.id , r.reason , r.created_at , u1.user_name , u1.profile_image
+            GROUP BY r.id , r.reason , r.created_at , u.user_name , u.profile_image
             ORDER BY MAX(r.created_at) DESC
             """, nativeQuery = true)
     List<Map<String, Object>> getReasonReportedPost(@Param("postId") UUID postId);
 
     @Query(value = """
-            SELECT COUNT(*) FROM report r WHERE r.reported_post_id IS NULL
+            SELECT COUNT(*) FROM reports r WHERE r.reported_post_id IS NULL
             """, nativeQuery = true)
     int countReportUser();
 
     @Query(value = """
-            SELECT COUNT(*) FROM report r WHERE r.reported_user_id IS NULL
+            SELECT COUNT(*) FROM reports r WHERE r.reported_user_id IS NULL
             """, nativeQuery = true)
     int countReportPost();
 }

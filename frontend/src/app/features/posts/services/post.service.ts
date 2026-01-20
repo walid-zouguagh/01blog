@@ -12,25 +12,15 @@ export interface UserSummary {
 export interface Post {
     id: string; // UUID
     title: string;
-    content: string; // was description in initial mock, backend says 'content'
-    media?: { url: string, type: 'IMAGE' | 'VIDEO' }[]; // Backend PostDto has List<MediaDto>
-    // Simplified for now based on what frontend used: urlMedia. 
-    // Backend PostDto: List<MediaDto> media. 
-    // Let's stick to what we see in Controller? 
-    // Actually PostDto has: content, title, media (List), nbrOfLike, nbrOfComments, isLiked
-    // We need to map this correctly.
-
-    // For compatibility with existing components (temporarily):
-    description?: string; // alias for content?
-    urlMedia?: string;
-    typeMedia?: 'IMAGE' | 'VIDEO';
+    content: string;
+    media: { url: string, type: 'IMAGE' | 'VIDEO' }[];
 
     // Correct fields
     user: UserSummary;
     nbrOfLike: number;
     nbrOfComments: number;
     isLiked: boolean;
-    createdAt: string;
+    createAt: string; // Backend calls it createAt, frontend usually expects createdAt. Let's match backend.
 }
 
 @Injectable({

@@ -32,21 +32,21 @@ export class NavBarComponent {
         this.notifService.getNotifications().subscribe({
             next: (data: NotificationDto[]) => {
                 this.notifications.set(data);
-                this.unreadCount.set(data.filter((n: NotificationDto) => !n.read).length);
+                this.unreadCount.set(data.filter((n: NotificationDto) => !n.isRead).length);
             }
         });
     }
 
     markAsRead(id: string) {
         this.notifService.readNotification(id).subscribe(() => {
-            this.notifications.update(list => list.map(n => n.id === id ? { ...n, read: true } : n));
+            this.notifications.update(list => list.map(n => n.id === id ? { ...n, isRead: true } : n));
             this.unreadCount.update(c => Math.max(0, c - 1));
         });
     }
 
     markAllAsRead() {
         this.notifService.readAll().subscribe(() => {
-            this.notifications.update(list => list.map(n => ({ ...n, read: true })));
+            this.notifications.update(list => list.map(n => ({ ...n, isRead: true })));
             this.unreadCount.set(0);
         });
     }

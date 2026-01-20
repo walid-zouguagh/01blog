@@ -48,12 +48,12 @@ export class CreatePostComponent {
             next: (post) => {
                 this.postForm.patchValue({
                     title: post.title,
-                    content: post.content || post.description
+                    content: post.content
                 });
                 // Handle media preview if needed
-                if (post.urlMedia) {
-                    this.previewUrl = post.urlMedia;
-                    this.mediaType = post.typeMedia || 'IMAGE';
+                if (post.media && post.media.length > 0) {
+                    this.previewUrl = post.media[0].url;
+                    this.mediaType = post.media[0].type;
                 }
             },
             error: (err) => {

@@ -27,15 +27,15 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                 u.id, u.user_name, u.first_name, u.last_name, u.bio, u.profile_image, u.role
                 COALESCE(flwing.followingCount, 0) AS following,
                 COALESCE(flwer.followerCount, 0) AS follower
-                FROM user u
+                FROM users u
                 LEFT JOIN (
                     SELECT follower_id, COUNT(*) AS followingCount
-                    FROM subscription
+                    FROM subscriptions
                     GROUP BY follower_id
                 ) flwing ON flwing.follower_id = u.id
                 LEFT JOIN (
                     SELECT following_id, COUNT(*) AS followerCount
-                    FROM subscription
+                    FROM subscriptions
                     GROUP BY following_id
                 ) flwer ON flwer.following_id = u.id
                 WHERE u.id = :id
@@ -43,7 +43,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Map<String, Object> findUserData(@Param("id") UUID id);
 
     @Query(value = """
-                SELECT u FROM user u
+                SELECT u FROM users u
                 WHERE LOWER(u.user_name) LIKE LOWER(CONCAT('%', :name, '%'))
                 OR LOWER(CONCAT(u.first_name, ' ', u.last_name)) LIKE LOWER(CONCAT('%', :name, '%'))
                 OR LOWER(CONCAT(u.last_name, ' ', u.first_name)) LIKE LOWER(CONCAT('%', :name, '%'))
@@ -51,12 +51,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> searchUsers(@Param("name") String name);
 
     @Query(value = """
-            SELECT * FROM user ORDER BY created_at OFFSET :offset LIMIT :limit
+            SELECT * FROM users ORDER BY created_at OFFSET :offset LIMIT :limit
             """, nativeQuery = true)
     List<User> findAllUsers(@Param("offset") int offset, @Param("limit") int limit);
 
     @Query(value = """
-            UPDATE user SET enabled = :isEnabled WHERE id = :userId
+            UPDATE users SET enabled = :isEnabled WHERE id = :userId
             """, nativeQuery = true)
     void updateEnabledUser(@Param("userId") UUID userId, @Param("isEnabled") boolean isEnabled);
 

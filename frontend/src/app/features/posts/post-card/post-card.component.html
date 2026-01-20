@@ -6,7 +6,7 @@
             <!-- Navigate to profile later? -->
         </div>
         <mat-card-title (click)="viewDetails()" class="clickable">{{ post.user.username }}</mat-card-title>
-        <mat-card-subtitle>{{ post.createdAt | date:'medium' }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ post.createAt | date:'medium' }}</mat-card-subtitle>
         <span class="spacer"></span>
         <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
             <mat-icon>more_vert</mat-icon>
@@ -24,13 +24,15 @@
     </mat-card-header>
 
     <mat-card-content (click)="viewDetails()" class="clickable">
-        <!-- Handle different content fields -->
-        <p>{{ post.content || post.description }}</p>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
     </mat-card-content>
 
-    <img mat-card-image *ngIf="post.urlMedia && post.typeMedia === 'IMAGE'" [src]="post.urlMedia" alt="Post image"
-        (click)="viewDetails()" class="clickable">
-    <video mat-card-image *ngIf="post.urlMedia && post.typeMedia === 'VIDEO'" [src]="post.urlMedia" controls></video>
+    @for (media of post.media; track $index) {
+        <img mat-card-image *ngIf="media.type === 'IMAGE'" [src]="media.url" alt="Post image"
+            (click)="viewDetails()" class="clickable">
+        <video mat-card-image *ngIf="media.type === 'VIDEO'" [src]="media.url" controls></video>
+    }
 
     <mat-card-actions align="start">
         <button mat-button (click)="$event.stopPropagation(); toggleLike()" [color]="liked() ? 'accent' : ''">

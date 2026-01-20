@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 // following_id	BIGINT FK → users.id	Who is followed
 // created_at	TIMESTAMP DEFAULT NOW()	Date followed
 
-@Table(name = "subscription")
+@Table(name = "subscriptions")
 @Entity
 @Data
 @AllArgsConstructor

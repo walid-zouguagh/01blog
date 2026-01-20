@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 // is_read	BOOLEAN DEFAULT FALSE	Status
 // created_at	TIMESTAMP DEFAULT NOW()	Timestamp
 
-@Table(name = "notification")
+@Table(name = "notifications")
 @Entity
 @Data
 @AllArgsConstructor

@@ -13,19 +13,19 @@ import com._01Blog.backend.model.entity.Like;
 public interface LikeRepository extends JpaRepository<Like, UUID> {
 
         @Query(value = """
-                        SELECT EXISTS(SELECT 1 FROM like l
+                        SELECT EXISTS(SELECT 1 FROM likes l
                         WHERE l.post_id = :postId AND l.user_id = :userId)
                         """, nativeQuery = true)
         boolean isLiked(@Param("userId") UUID userId, @Param("postId") UUID postId);
 
         @Query(value = """
-                        DELETE FROM like l WHERE l.user_id = :userId AND l.post_id = :postId
+                        DELETE FROM likes l WHERE l.user_id = :userId AND l.post_id = :postId
                         """, nativeQuery = true)
         void deleteLikeByPost(@Param("userId") UUID userId, @Param("postId") UUID postId);
 
         // SELECT COUNT(DISTINCT userId) FROM Like l WHERE l.postId = :postId;
         @Query(value = """
-                        SELECT COUNT(*) FROM like l WHERE l.post_id = :postId
+                        SELECT COUNT(*) FROM likes l WHERE l.post_id = :postId
                         """, nativeQuery = true)
         int countOfLikedPost(@Param("postId") UUID postId);
 }

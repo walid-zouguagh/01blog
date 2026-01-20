@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 // created_at	TIMESTAMP DEFAULT NOW()	Timestamp
 
 @Entity
-@Table(name = "like")
+@Table(name = "likes")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

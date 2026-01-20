@@ -21,9 +21,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private NotificationRepository notificationRepository;
-    private UserRepository userRepository;
-    private SubscriptionRepository subscriptionRepository;
+    private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     // Set Notification
     @Async
@@ -34,7 +34,7 @@ public class NotificationService {
         UUID userId = fromUser.getId();
         do {
             listIdUsers = subscriptionRepository.getFollowers(userId, offset);
-            if (listIdUsers == null || listIdUsers.size() == 0) 
+            if (listIdUsers == null || listIdUsers.size() == 0)
                 break;
 
             for (UUID idUser : listIdUsers) {
@@ -44,7 +44,7 @@ public class NotificationService {
                 }
             }
             offset += 10;
-        }while(listIdUsers.size() == 10);
+        } while (listIdUsers.size() == 10);
     }
 
     @Transactional
@@ -70,12 +70,13 @@ public class NotificationService {
         return notificationRepository.countNotification(userId);
     }
 
-    public void readNotification(User user, UUID notifId) throws ExceptionProgram{
+    public void readNotification(User user, UUID notifId) throws ExceptionProgram {
         UUID userId = user.getId();
-        Notification notification = notificationRepository.findById(notifId).orElseThrow(() -> new ExceptionProgram(400, "this notification not found"));
+        Notification notification = notificationRepository.findById(notifId)
+                .orElseThrow(() -> new ExceptionProgram(400, "this notification not found"));
         if (notification != null && notification.getToUser().getId().equals(userId)) {
             notificationRepository.updateRead(notifId);
-        }else {
+        } else {
             throw new ExceptionProgram(403, "you aren't authorized to read this notification");
         }
     }

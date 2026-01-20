@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 // created_at	TIMESTAMP DEFAULT NOW()	Timestamp
 // status	ENUM('PENDING', 'REVIEWED', 'ACTION_TAKEN')	For admin tracking
 
-@Table(name = "report")
+@Table(name = "reports")
 @Entity
 @Data
 @AllArgsConstructor

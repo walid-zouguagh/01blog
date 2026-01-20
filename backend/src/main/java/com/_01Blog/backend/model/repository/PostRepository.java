@@ -25,11 +25,11 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
             COUNT(DISTINCT cm.id) AS totalComments,
             COUNT(DISTINCT l.id) AS totalLikes,
-            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
-            FROM post p
-            JOIN user u ON p.user_id = u.id
-            LEFT JOIN comment cm ON cm.post_id = p.id
-            LEFT JOIN like l ON l.post_id = p.id
+            EXISTS(SELECT 1 FROM likes l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            LEFT JOIN comments cm ON cm.post_id = p.id
+            LEFT JOIN likes l ON l.post_id = p.id
             WHERE p.is_hidden = false
             GROUP BY
                 p.id, p.title, p.content, p.created_at,
@@ -46,12 +46,12 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
             COUNT(DISTINCT cm.id) AS totalComments,
             COUNT(DISTINCT l.id) AS totalLikes,
-            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
-            FROM post p
-            JOIN user u ON u.id = p.user_id
-            LEFT JOIN comment cm ON cm.post_id = p.id
-            LEFT JOIN like l ON l.post_id = p.id
-            WHERE p.is_hidden = false AND (EXISTS(SELECT 1 FROM subscription WHERE follower_id = :userId AND following_id = u.id) OR u.id = :userId)
+            EXISTS(SELECT 1 FROM likes l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM posts p
+            JOIN users u ON u.id = p.user_id
+            LEFT JOIN comments cm ON cm.post_id = p.id
+            LEFT JOIN likes l ON l.post_id = p.id
+            WHERE p.is_hidden = false AND (EXISTS(SELECT 1 FROM subscriptions WHERE follower_id = :userId AND following_id = u.id) OR u.id = :userId)
             GROUP BY
                 p.id, p.title, p.content, p.created_at,
                 u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role
@@ -66,11 +66,11 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
             COUNT(DISTINCT cm.id) AS totalComments,
             COUNT(DISTINCT l.id) AS totalLikes,
-            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
-            FROM post p
-            JOIN user u ON u.id = p.user_id
-            LEFT JOIN comment cm ON cm.post_id = p.id
-            LEFT JOIN like l ON l.post_id = p.id
+            EXISTS(SELECT 1 FROM likes l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM posts p
+            JOIN users u ON u.id = p.user_id
+            LEFT JOIN comments cm ON cm.post_id = p.id
+            LEFT JOIN likes l ON l.post_id = p.id
             WHERE p.is_hidden = false AND u.id = :idUserProfile
             GROUP BY
                 p.id, p.title, p.content, p.created_at,
@@ -87,11 +87,11 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.id, u.user_name, u.first_name, u.last_name, u.profile_image, u.role,
             COUNT(DISTINCT cm.id) AS totalComments,
             COUNT(DISTINCT l.id) AS totalLikes,
-            EXISTS(SELECT 1 FROM like l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
-            FROM post p
-            JOIN user u ON u.id = p.user_id
-            LEFT JOIN comment cm ON cm.post_id = p.id
-            LEFT JOIN like l ON l.post_id = p.id
+            EXISTS(SELECT 1 FROM likes l2 WHERE l2.post_id = p.id AND l2.user_id = :userId) AS isLiked
+            FROM posts p
+            JOIN users u ON u.id = p.user_id
+            LEFT JOIN comments cm ON cm.post_id = p.id
+            LEFT JOIN likes l ON l.post_id = p.id
             WHERE p.is_hidden = false AND p.id = :postId
             GROUP BY
                 p.id, p.title, p.content, p.created_at,
@@ -101,7 +101,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     Map<String, Object> getPost(@Param("userId") UUID userId, @Param("postId") UUID postId);
 
     @Query(value = """
-            UPDATE post SET is_hidden = :isHiden WHERE id = :postId
+            UPDATE posts SET is_hidden = :isHiden WHERE id = :postId
             """, nativeQuery = true)
     void hidePost(@Param("postId") UUID postId, @Param("isHiden") boolean isHidden);
 

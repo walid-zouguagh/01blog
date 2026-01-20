@@ -3,12 +3,16 @@ import { ApiService } from '../../../core/services/api.service';
 import { Observable } from 'rxjs';
 
 export interface NotificationDto {
-    id: string; // UUID
-    userId: string;
-    description: string;
-    read: boolean;
-    createdAt?: string;
-    // userFrom? post?
+    id: string;
+    fromUserId: string;
+    fromUserName: string;
+    photoUrl: string;
+    toUserId: string;
+    toUserName: string;
+    postId: string;
+    message: string;
+    isRead: boolean; // backend says getIsRead(), field likely isRead
+    createAt: string;
 }
 
 @Injectable({

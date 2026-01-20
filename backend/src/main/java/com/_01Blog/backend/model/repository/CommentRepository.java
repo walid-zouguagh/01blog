@@ -27,9 +27,9 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
                 u.role AS role,
                 u.profile_image AS profileImage
 
-                FROM comment cm
-                JOIN user u ON u.id = cm.user_id
-                JOIN post p ON p.id = cm.post_id
+                FROM comments cm
+                JOIN users u ON u.id = cm.user_id
+                JOIN posts p ON p.id = cm.post_id
                 WHERE p.is_hidden = false AND p.id = :postId
                 GROUP BY
                     cm.id, cm.content, cm.created_at,

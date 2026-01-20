@@ -18,8 +18,8 @@
             </div>
             <div class="notif-list">
                 @for (n of notifications(); track n.id) {
-                <button mat-menu-item (click)="markAsRead(n.id)" [class.unread]="!n.read">
-                    <span>{{n.description}}</span>
+                <button mat-menu-item (click)="markAsRead(n.id)" [class.unread]="!n.isRead">
+                    <span>{{n.message}}</span>
                 </button>
                 } @empty {
                 <div class="empty-notif">No notifications</div>

@@ -5,20 +5,22 @@
                 [style.background-image]="'url(' + (p.user.profilePicture || 'assets/avatar-placeholder.png') + ')'">
             </div>
             <mat-card-title>{{ p.user.username }}</mat-card-title>
-            <mat-card-subtitle>{{ p.createdAt | date:'medium' }}</mat-card-subtitle>
+            <mat-card-subtitle>{{ p.createAt | date:'medium' }}</mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-content>
             <h2>{{ p.title }}</h2>
-            <p>{{ p.content || p.description }}</p>
+            <p>{{ p.content }}</p>
         </mat-card-content>
 
-        <img mat-card-image *ngIf="p.urlMedia && p.typeMedia === 'IMAGE'" [src]="p.urlMedia" alt="Post image">
-        <!-- Also handle media list if backend implemented it -->
+        @for (media of p.media; track $index) {
+        <img mat-card-image *ngIf="media.type === 'IMAGE'" [src]="media.url" alt="Post image">
+        <video mat-card-image *ngIf="media.type === 'VIDEO'" [src]="media.url" controls></video>
+        }
 
         <mat-card-actions>
-            <button mat-button>
-                <mat-icon>favorite_border</mat-icon> {{ p.nbrOfLike || 0 }}
+            <button mat-button (click)="toggleLike()" [color]="p.isLiked ? 'accent' : ''">
+                <mat-icon>{{ p.isLiked ? 'favorite' : 'favorite_border' }}</mat-icon> {{ p.nbrOfLike || 0 }}
             </button>
             <button mat-button>
                 <mat-icon>comment</mat-icon> {{ p.nbrOfComments || 0 }}
