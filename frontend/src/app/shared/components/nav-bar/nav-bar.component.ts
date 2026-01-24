@@ -22,6 +22,12 @@ export class NavBarComponent {
 
     constructor(public auth: AuthService, private notifService: NotificationService) { }
 
+    getProfileImageUrl(url: string | undefined): string {
+        if (!url) return 'assets/avatar-placeholder.png';
+        if (url.startsWith('http')) return url;
+        return `http://localhost:8080${url}`;
+    }
+
     ngOnInit() {
         if (this.auth.currentUser()) {
             this.loadNotifications();

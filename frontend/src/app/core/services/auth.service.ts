@@ -27,7 +27,7 @@ export class AuthService {
         );
     }
 
-    register(data: RegisterDto): Observable<AuthResponse> {
+    register(data: any): Observable<AuthResponse> {
         return this.http.post<AuthResponse>('http://localhost:8080/auth/register', data).pipe(
             tap(response => this.setSession(response))
         );

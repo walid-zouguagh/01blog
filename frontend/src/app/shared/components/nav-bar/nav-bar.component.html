@@ -30,7 +30,7 @@
         <!-- User Menu -->
         <button mat-icon-button [matMenuTriggerFor]="userMenu">
             <div class="user-avatar"
-                [style.background-image]="'url(' + (auth.currentUser()?.urlProfileImage || 'assets/avatar-placeholder.png') + ')'">
+                [style.background-image]="'url(' + getProfileImageUrl(auth.currentUser()?.urlProfileImage) + ')'">
             </div>
         </button>
         <mat-menu #userMenu="matMenu">

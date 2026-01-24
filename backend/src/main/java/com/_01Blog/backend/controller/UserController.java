@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -36,8 +37,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(path = "/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterDto request) throws ExceptionProgram {
+    @PostMapping(path = "/register", consumes = "multipart/form-data")
+    public ResponseEntity<AuthResponse> register(@ModelAttribute RegisterDto request) throws ExceptionProgram {
         AuthResponse response = userService.register(request);
         return ResponseEntity.ok(response);
 

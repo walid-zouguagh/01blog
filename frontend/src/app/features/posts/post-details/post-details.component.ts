@@ -39,6 +39,12 @@ export class PostDetailsComponent {
         content: ['', [Validators.required, Validators.minLength(3)]]
     });
 
+    getMediaUrl(url: string | undefined): string {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        return `http://localhost:8080${url}`;
+    }
+
     ngOnInit() {
         const postId = this.route.snapshot.paramMap.get('id');
         if (postId) {

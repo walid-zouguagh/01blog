@@ -1,7 +1,7 @@
 <mat-card class="post-card glass-panel">
     <mat-card-header>
         <div mat-card-avatar class="post-avatar clickable"
-            [style.background-image]="'url(' + (post.user.profilePicture || 'assets/avatar-placeholder.png') + ')'"
+            [style.background-image]="'url(' + (getMediaUrl(post.user.urlProfileImage) || 'assets/avatar-placeholder.png') + ')'"
             (click)="$event.stopPropagation(); viewProfile()">
             <!-- Navigate to profile -->
         </div>

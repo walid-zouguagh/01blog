@@ -19,6 +19,9 @@ export class RegisterComponent {
     registerForm: FormGroup;
     errorMessage = signal('');
     hidePassword = true;
+    selectedFile: File | null = null;
+    selectedFileName: string | null = null;
+    imagePreview: string | null = null;
 
     constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
         this.registerForm = this.fb.group({
@@ -26,15 +29,43 @@ export class RegisterComponent {
             lastName: ['', [Validators.required]],
             email: ['', [Validators.required, Validators.email]],
             userName: ['', [Validators.required]],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            bio: ['']
         });
+    }
+
+    onFileSelected(event: any) {
+        const file = event.target.files[0];
+        if (file) {
+            this.selectedFile = file;
+            this.selectedFileName = file.name;
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.imagePreview = reader.result as string;
+            };
+            reader.readAsDataURL(file);
+        }
     }
 
     onSubmit() {
         if (this.registerForm.valid) {
             this.errorMessage.set('');
-            console.log(this.registerForm.value);
-            this.auth.register(this.registerForm.value).subscribe({
+
+            const formData = new FormData();
+            Object.keys(this.registerForm.value).forEach(key => {
+                const value = this.registerForm.value[key];
+                if (value !== null && value !== undefined) {
+                    formData.append(key, value);
+                }
+            });
+
+            if (this.selectedFile) {
+                formData.append('profileImage', this.selectedFile);
+            }
+
+            this.auth.register(formData).subscribe({
                 next: () => {
                     this.router.navigate(['/']);
                 },
