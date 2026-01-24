@@ -5,7 +5,7 @@ import { HttpParams } from '@angular/common/http';
 
 export interface UserSummary {
     id: string; // UUID
-    username: string;
+    userName: string;
     profilePicture?: string;
 }
 

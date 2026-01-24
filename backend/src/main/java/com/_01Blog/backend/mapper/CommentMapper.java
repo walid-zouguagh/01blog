@@ -15,8 +15,9 @@ import com._01Blog.backend.model.enums.Role;
 @Component
 public class CommentMapper {
     public static CommentDto toDto(Comment comment) {
-        if (comment == null) return null;
-        CommentDto commentDto = new CommentDto(); 
+        if (comment == null)
+            return null;
+        CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
         commentDto.setPostId(comment.getPost().getId());
         commentDto.setUser(UserMapper.toDto(comment.getUser()));
@@ -27,23 +28,44 @@ public class CommentMapper {
     }
 
     public static List<CommentDto> toDto(List<Map<String, Object>> commentList) {
-        if (commentList == null) return null;
+        if (commentList == null)
+            return null;
 
         return commentList.stream().map((comment) -> {
-            
-            CommentDto commentDto = new CommentDto(); 
+
+            CommentDto commentDto = new CommentDto();
             commentDto.setId((UUID) comment.get("id"));
             // commentDto.setPostId((UUID) comment.getPost().getId());
             commentDto.setContent((String) comment.get("content"));
-            commentDto.setCreatedAt((LocalDateTime) comment.get("createdAt"));
+            // Handle Timestamp -> LocalDateTime safely
+            Object createdAtObj = comment.get("createdat");
+            if (createdAtObj instanceof java.sql.Timestamp) {
+                commentDto.setCreatedAt(((java.sql.Timestamp) createdAtObj).toLocalDateTime());
+            } else if (createdAtObj instanceof java.time.LocalDateTime) {
+                commentDto.setCreatedAt((java.time.LocalDateTime) createdAtObj);
+            }
 
             RegisterDto userDto = new RegisterDto();
             userDto.setId((UUID) comment.get("uid"));
-            userDto.setUserName((String) comment.get("userName"));
-            userDto.setFirstName((String) comment.get("firstName"));
-            userDto.setLastName((String) comment.get("lastName"));
-            userDto.setRole((Role) comment.get("role"));
-            userDto.setUrlProfileImage((String) comment.get("profileImage"));
+            userDto.setUserName((String) comment.get("username"));
+            userDto.setFirstName((String) comment.get("firstname"));
+            userDto.setLastName((String) comment.get("lastname"));
+
+            // Handle Role safely
+            Object roleObj = comment.get("role");
+            if (roleObj instanceof String) {
+                try {
+                    userDto.setRole(Role.valueOf(((String) roleObj).toUpperCase()));
+                } catch (Exception e) {
+                    userDto.setRole(Role.USER);
+                }
+            } else if (roleObj instanceof Role) {
+                userDto.setRole((Role) roleObj);
+            } else {
+                userDto.setRole(Role.USER);
+            }
+
+            userDto.setUrlProfileImage((String) comment.get("profileimage"));
             commentDto.setUser(userDto);
 
             return commentDto;

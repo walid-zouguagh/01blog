@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class PostDto {
     // private String mediaUrl;
     private int nbrOfLike;
     private int nbrOfComments;
+    @JsonProperty("isLiked")
     private boolean isLiked;
     @JsonIgnore
     private MultipartFile[] images;

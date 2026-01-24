@@ -31,6 +31,15 @@ export class PostCardComponent {
     private likeService = inject(LikeService);
     public auth = inject(AuthService);
 
+    getMediaUrl(url: string | undefined): string {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        // environment.apiUrl is http://localhost:8080/api
+        // We need http://localhost:8080
+        const baseUrl = 'http://localhost:8080';
+        return `${baseUrl}${url}`;
+    }
+
     ngOnInit() {
         this.liked.set(this.post.isLiked || false);
         this.likeCount.set(this.post.nbrOfLike || 0);
@@ -57,8 +66,16 @@ export class PostCardComponent {
         });
     }
 
+    viewProfile() {
+        this.router.navigate(['/profile', this.post.user.id]);
+    }
+
     viewDetails() {
         this.router.navigate(['/post', this.post.id]);
+    }
+
+    editPost() {
+        this.router.navigate(['/edit-post', this.post.id]);
     }
 
     deletePost() {

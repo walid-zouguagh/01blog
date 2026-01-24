@@ -33,7 +33,8 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
                 WHERE p.is_hidden = false AND p.id = :postId
                 GROUP BY
                     cm.id, cm.content, cm.created_at,
-                    u.id, u.user_name, u.first_name, u.last_name, u.role
+                    u.id, u.user_name, u.first_name, u.last_name, u.role, u.profile_image,
+                    p.id
                 ORDER BY cm.created_at DESC
                 LIMIT 10 OFFSET :offset
             """, nativeQuery = true)

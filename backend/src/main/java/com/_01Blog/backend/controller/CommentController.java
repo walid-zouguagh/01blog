@@ -35,12 +35,11 @@ public class CommentController {
     // get comments
     @GetMapping(path = "get_comments")
     public List<CommentDto> getComments(
-        @RequestAttribute("userId") UUID userId,
-        @RequestParam(defaultValue = "0", name = "postId") UUID postId,
-        @RequestParam(defaultValue = "0", name = "offset") int offset) {
-            return commentService.getComments(postId, userId, offset);
+            @RequestAttribute("user") User user,
+            @RequestParam(name = "postId") UUID postId,
+            @RequestParam(defaultValue = "0", name = "offset") int offset) {
+        return commentService.getComments(postId, user.getId(), offset);
     }
-
 
     // create comment
     @PostMapping(path = "create_comment")
@@ -51,17 +50,14 @@ public class CommentController {
     }
 
     // delete comment
-    @DeleteMapping("/comments/{commentId}")  // ← Use DELETE, not POST!
+    @DeleteMapping("/comments/{commentId}") // ← Use DELETE, not POST!
     public ResponseEntity<?> deleteComment(
-        @NonNull @PathVariable UUID commentId,
-        @RequestAttribute("user") User currentUser) throws ExceptionProgram {
+            @NonNull @PathVariable UUID commentId,
+            @RequestAttribute("user") User currentUser) throws ExceptionProgram {
 
         commentService.deleteComment(currentUser, commentId);
-    
+
         return ResponseEntity.ok().body(Map.of("message", "Comment deleted successfully"));
     }
-    
-
-
 
 }

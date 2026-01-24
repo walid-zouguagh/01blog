@@ -1,17 +1,22 @@
 <mat-card class="post-card glass-panel">
     <mat-card-header>
-        <div mat-card-avatar class="post-avatar"
+        <div mat-card-avatar class="post-avatar clickable"
             [style.background-image]="'url(' + (post.user.profilePicture || 'assets/avatar-placeholder.png') + ')'"
-            (click)="$event.stopPropagation();">
-            <!-- Navigate to profile later? -->
+            (click)="$event.stopPropagation(); viewProfile()">
+            <!-- Navigate to profile -->
         </div>
-        <mat-card-title (click)="viewDetails()" class="clickable">{{ post.user.username }}</mat-card-title>
+        <mat-card-title (click)="$event.stopPropagation(); viewProfile()" class="clickable">{{ post.user.userName
+            }}</mat-card-title>
         <mat-card-subtitle>{{ post.createAt | date:'medium' }}</mat-card-subtitle>
         <span class="spacer"></span>
         <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngIf="isOwner()" (click)="editPost()">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+            </button>
             <button mat-menu-item *ngIf="isOwner()" (click)="deletePost()">
                 <mat-icon>delete</mat-icon>
                 <span>Delete</span>
@@ -29,9 +34,9 @@
     </mat-card-content>
 
     @for (media of post.media; track $index) {
-        <img mat-card-image *ngIf="media.type === 'IMAGE'" [src]="media.url" alt="Post image"
-            (click)="viewDetails()" class="clickable">
-        <video mat-card-image *ngIf="media.type === 'VIDEO'" [src]="media.url" controls></video>
+    <img mat-card-image *ngIf="media.type === 'IMAGE'" [src]="getMediaUrl(media.url)" alt="Post image"
+        (click)="viewDetails()" class="clickable">
+    <video mat-card-image *ngIf="media.type === 'VIDEO'" [src]="getMediaUrl(media.url)" controls></video>
     }
 
     <mat-card-actions align="start">

@@ -2,17 +2,21 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { Observable } from 'rxjs';
 import { User } from '../../../shared/models/user.model';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProfileService {
 
-    constructor(private api: ApiService) { }
+    constructor(private api: ApiService, private http: HttpClient) { }
 
     getProfile(id: string): Observable<User> {
-        return this.api.get<User>(`profile/${id}`);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get<User>(`http://localhost:8080/auth/profile/${id}`, { headers });
     }
 
     getCurrentUser(): Observable<User> {

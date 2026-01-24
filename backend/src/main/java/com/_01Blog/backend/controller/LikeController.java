@@ -23,9 +23,8 @@ public class LikeController {
 
     @PostMapping(path = "like")
     public Map<String, Object> like(
-        @RequestAttribute("user") User user,
-        @RequestParam(defaultValue = "0", name = "postId") UUID postId
-    ) throws ExceptionProgram {
+            @RequestAttribute("user") User user,
+            @RequestParam(name = "postId") UUID postId) throws ExceptionProgram {
         return likeService.like(user, postId);
     }
 

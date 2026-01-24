@@ -6,12 +6,14 @@
 
 .post-card {
     margin-bottom: 24px;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
 .post-avatar {
     background-size: cover;
     background-position: center;
-    background-color: #ddd;
+    background-color: var(--glass-bg-hover);
 }
 
 img[mat-card-image] {
@@ -22,13 +24,16 @@ img[mat-card-image] {
 
 .comments-section {
     padding: 24px;
-    background: rgba(255, 255, 255, 0.4);
+    /* Dark glass background for dark mode */
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    margin-top: 20px;
 }
 
 .comments-section h3 {
     margin-top: 0;
     margin-bottom: 16px;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .full-width {
@@ -39,7 +44,7 @@ img[mat-card-image] {
     display: flex;
     gap: 12px;
     padding: 16px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .comment-item:last-child {
@@ -52,7 +57,7 @@ img[mat-card-image] {
     border-radius: 50%;
     background-size: cover;
     background-position: center;
-    background-color: #ddd;
+    background-color: var(--glass-bg-hover);
     flex-shrink: 0;
 }
 
@@ -69,22 +74,22 @@ img[mat-card-image] {
 
 .username {
     font-weight: 600;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .date {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.8rem;
 }
 
 .comment-content p {
     margin: 0;
     line-height: 1.4;
-    color: #444;
+    color: var(--text-primary);
 }
 
 .no-comments {
     text-align: center;
-    color: #888;
+    color: var(--text-secondary);
     padding: 20px;
 }

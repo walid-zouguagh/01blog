@@ -54,9 +54,7 @@ public class UserService {
         // ✅ 5. Build response
         AuthResponse authResponse = new AuthResponse();
         authResponse.setToken(token);
-        // authResponse.setEmail(user.getEmail());
-        // authResponse.setRole(user.getRole().name());
-
+        authResponse.setUser(UserMapper.toDto(user));
         return authResponse;
     }
 
@@ -97,6 +95,7 @@ public class UserService {
         String token = jwtService.generateToken(user);
         AuthResponse authResponse = new AuthResponse();
         authResponse.setToken(token);
+        authResponse.setUser(UserMapper.toDto(user));
         return authResponse;
     }
 

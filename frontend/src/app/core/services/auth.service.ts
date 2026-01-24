@@ -46,13 +46,10 @@ export class AuthService {
 
     private setSession(authResult: AuthResponse) {
         localStorage.setItem(this.tokenKey, authResult.token);
-        // Since AuthResponse might not have full user details, we might decode token or fetch profile
-        // For now assuming we parse token or get it separately.
-        // If backend returns user in response:
-        // const user = authResult.user;
-        // localStorage.setItem(this.userKey, JSON.stringify(user));
-        // this.currentUser.set(user);
-        // If not, we might need a 'me' endpoint or decode JWT.
+        if (authResult.user) {
+            localStorage.setItem(this.userKey, JSON.stringify(authResult.user));
+            this.currentUser.set(authResult.user);
+        }
     }
 
     private getUserFromStorage(): User | null {

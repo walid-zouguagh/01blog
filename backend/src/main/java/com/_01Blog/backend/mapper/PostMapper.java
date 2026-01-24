@@ -52,22 +52,43 @@ public class PostMapper {
             return null;
 
         PostDto dto = new PostDto();
-        dto.setId(((UUID) post.get("id")));
-        // dto.setUser((User) post.get("user"));
+        dto.setId((UUID) post.get("id"));
         dto.setTitle((String) post.get("title"));
         dto.setContent((String) post.get("content"));
-        dto.setCreateAt((LocalDateTime) post.get("createdAt"));
-        dto.setNbrOfComments(((Number) post.get("totalComments")).intValue());
-        dto.setNbrOfLike(((Number) post.get("totalLikes")).intValue());
-        dto.setLiked((Boolean) post.get("isLiked"));
+
+        // Handle Timestamp -> LocalDateTime
+        Object createdAtObj = post.get("createdat");
+        if (createdAtObj instanceof java.sql.Timestamp) {
+            dto.setCreateAt(((java.sql.Timestamp) createdAtObj).toLocalDateTime());
+        } else if (createdAtObj instanceof java.time.LocalDateTime) {
+            dto.setCreateAt((java.time.LocalDateTime) createdAtObj);
+        }
+
+        dto.setNbrOfComments(((Number) post.get("totalcomments")).intValue());
+        dto.setNbrOfLike(((Number) post.get("totallikes")).intValue());
+        // Postgres lowercases aliases by default
+        Object isLikedObj = post.get("isliked");
+        dto.setLiked(isLikedObj != null && (Boolean) isLikedObj);
 
         RegisterDto userDto = new RegisterDto();
-        userDto.setId((UUID) post.get("id"));
-        userDto.setUserName((String) post.get("userName"));
-        userDto.setFirstName((String) post.get("firstName"));
-        userDto.setLastName((String) post.get("lastName"));
-        userDto.setUrlProfileImage((String) post.get("profileImage"));
-        userDto.setRole((Role) post.get("role"));
+        userDto.setId((UUID) post.get("userid"));
+        userDto.setUserName((String) post.get("username"));
+        userDto.setFirstName((String) post.get("firstname"));
+        userDto.setLastName((String) post.get("lastname"));
+        userDto.setUrlProfileImage((String) post.get("profileimage"));
+
+        // Handle Role string conversion
+        Object roleObj = post.get("role");
+        if (roleObj instanceof String) {
+            try {
+                userDto.setRole(Role.valueOf(((String) roleObj).toUpperCase()));
+            } catch (Exception e) {
+                userDto.setRole(Role.USER);
+            }
+        } else if (roleObj instanceof Role) {
+            userDto.setRole((Role) roleObj);
+        }
+
         dto.setUser(userDto);
         return dto;
     }

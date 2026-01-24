@@ -55,7 +55,7 @@ public class PostController {
     // Delete Posts
     @DeleteMapping(path = "delete_post")
     public ResponseEntity<?> deletePost(
-            @RequestParam(defaultValue = "0", name = "postId") UUID postId,
+            @RequestParam(name = "postId") UUID postId,
             @RequestAttribute("user") User user) throws Exception {
         postService.delete(postId, user);
         return ResponseEntity.ok(postId);
@@ -95,7 +95,7 @@ public class PostController {
     // Get Post By Id
     @GetMapping(path = "post")
     public ResponseEntity<?> getPost(
-            @RequestParam(defaultValue = "0", name = "postId") UUID postId,
+            @RequestParam(name = "postId") UUID postId,
             @RequestAttribute("user") User currentUser) throws Exception {
         PostDto post = postService.getPost(currentUser, postId);
         if (post != null) {

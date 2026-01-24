@@ -17,17 +17,19 @@ import com._01Blog.backend.model.repository.PostRepository;
 
 import jakarta.transaction.Transactional;
 
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
 
-    private CommentRepository commentRepository;
-    private PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     public CommentDto createComment(CommentDto commentDto, User user) throws ExceptionProgram {
-        Post post = postRepository.findById( commentDto.getPostId())
+        Post post = postRepository.findById(commentDto.getPostId())
                 .orElseThrow(() -> new ExceptionProgram(400, "post not found"));
-        
+
         if (post.isHidden()) {
             throw new ExceptionProgram(400, "you can't comment in this post");
         }
@@ -40,15 +42,15 @@ public class CommentService {
         return CommentMapper.toDto(comment);
     }
 
-    //Get Comments
+    // Get Comments
     public List<CommentDto> getComments(UUID postId, UUID userId, int offset) {
         return CommentMapper.toDto(commentRepository.getComments(postId, userId, offset));
     }
 
     // Delete Comment
     @Transactional
-    public void deleteComment(User currentUser,@NonNull UUID commentId) throws ExceptionProgram {
-        
+    public void deleteComment(User currentUser, @NonNull UUID commentId) throws ExceptionProgram {
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ExceptionProgram(404, "Comment not found"));
 
@@ -59,7 +61,7 @@ public class CommentService {
 
         // Optional: Also allow post owner to delete any comment
         // if (!comment.getPost().getUser().getId().equals(currentUser.getId())) {
-        //     throw new ExceptionProgram(403, "Not authorized");
+        // throw new ExceptionProgram(403, "Not authorized");
         // }
 
         commentRepository.delete(comment);

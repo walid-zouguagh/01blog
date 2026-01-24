@@ -13,10 +13,13 @@ import com._01Blog.backend.model.entity.User;
 import com._01Blog.backend.model.repository.LikeRepository;
 import com._01Blog.backend.model.repository.PostRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class LikeService {
-    private LikeRepository likeRepository;
-    private PostRepository postRepository;
+    private final LikeRepository likeRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public Map<String, Object> like(User user, UUID postId) throws ExceptionProgram {

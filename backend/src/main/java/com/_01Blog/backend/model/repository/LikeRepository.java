@@ -18,6 +18,7 @@ public interface LikeRepository extends JpaRepository<Like, UUID> {
                         """, nativeQuery = true)
         boolean isLiked(@Param("userId") UUID userId, @Param("postId") UUID postId);
 
+        @org.springframework.data.jpa.repository.Modifying
         @Query(value = """
                         DELETE FROM likes l WHERE l.user_id = :userId AND l.post_id = :postId
                         """, nativeQuery = true)

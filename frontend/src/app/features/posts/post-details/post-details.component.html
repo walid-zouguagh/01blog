@@ -4,7 +4,7 @@
             <div mat-card-avatar class="post-avatar"
                 [style.background-image]="'url(' + (p.user.profilePicture || 'assets/avatar-placeholder.png') + ')'">
             </div>
-            <mat-card-title>{{ p.user.username }}</mat-card-title>
+            <mat-card-title>{{ p.user.userName }}</mat-card-title>
             <mat-card-subtitle>{{ p.createAt | date:'medium' }}</mat-card-subtitle>
         </mat-card-header>
 
@@ -34,7 +34,7 @@
         <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="comment-form">
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Add a comment...</mat-label>
-                <textarea matInput formControlName="content" rows="2"></textarea>
+                <input matInput formControlName="content" placeholder="Write a comment...">
                 <button mat-icon-button matSuffix type="submit" [disabled]="commentForm.invalid" color="primary">
                     <mat-icon>send</mat-icon>
                 </button>
