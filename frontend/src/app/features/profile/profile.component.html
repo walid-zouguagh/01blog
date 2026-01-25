@@ -6,8 +6,7 @@
     } @else if (user()) {
     <div class="glass-panel profile-header">
         <div class="header-content">
-            <div class="avatar"
-                [style.background-image]="'url(' + (user()?.urlProfileImage || 'assets/avatar-placeholder.png') + ')'">
+            <div class="avatar" [style.background-image]="'url(' + getProfileImageUrl(user()?.urlProfileImage) + ')'">
             </div>
 
             <div class="info">
@@ -50,7 +49,6 @@
             <mat-tab label="About">
                 <div class="about-section">
                     <p>Email: {{ user()?.email }}</p>
-                    <p>Joined: 2024</p> <!-- Date not in DTO currently -->
                 </div>
             </mat-tab>
         </mat-tab-group>

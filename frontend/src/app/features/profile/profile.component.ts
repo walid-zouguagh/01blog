@@ -32,6 +32,12 @@ export class ProfileComponent {
         private authService: AuthService
     ) { }
 
+    getProfileImageUrl(url: string | undefined): string {
+        if (!url) return 'assets/avatar-placeholder.png';
+        if (url.startsWith('http')) return url;
+        return `http://localhost:8080${url}`;
+    }
+
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
             const id = params.get('id');

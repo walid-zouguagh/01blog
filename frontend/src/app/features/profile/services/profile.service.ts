@@ -20,7 +20,11 @@ export class ProfileService {
     }
 
     getCurrentUser(): Observable<User> {
-        return this.api.get<User>('forme');
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get<User>('http://localhost:8080/auth/forme', { headers });
     }
 
     followUser(userId: string): Observable<any> {
@@ -29,7 +33,11 @@ export class ProfileService {
     }
 
     searchUsers(name: string): Observable<User[]> {
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
         const params = new HttpParams().set('name', name);
-        return this.api.get<User[]>('search', params);
+        return this.http.get<User[]>('http://localhost:8080/auth/search', { headers, params });
     }
 }
