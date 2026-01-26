@@ -55,6 +55,24 @@ export class PostDetailsComponent {
         }
     }
 
+    currentSlide = signal(0);
+
+    nextSlide(event: Event) {
+        event.stopPropagation();
+        const p = this.post();
+        if (p && p.media && p.media.length > 1) {
+            this.currentSlide.update(curr => (curr + 1) % p.media.length);
+        }
+    }
+
+    prevSlide(event: Event) {
+        event.stopPropagation();
+        const p = this.post();
+        if (p && p.media && p.media.length > 1) {
+            this.currentSlide.update(curr => (curr - 1 + p.media.length) % p.media.length);
+        }
+    }
+
     loadPost(id: string) {
         this.postService.getPost(id).pipe(
             catchError(err => {

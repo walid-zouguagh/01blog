@@ -13,9 +13,26 @@
             <p>{{ p.content }}</p>
         </mat-card-content>
 
-        @for (media of p.media; track $index) {
-        <img mat-card-image *ngIf="media.type === 'IMAGE'" [src]="media.url" alt="Post image">
-        <video mat-card-image *ngIf="media.type === 'VIDEO'" [src]="media.url" controls></video>
+        @if (p.media && p.media.length > 0) {
+        <div class="media-carousel">
+            <div class="media-wrapper">
+                @let media = p.media[currentSlide()];
+                <img *ngIf="media.type === 'IMAGE'" [src]="getMediaUrl(media.url)" alt="Post image"
+                    class="carousel-media">
+                <video *ngIf="media.type === 'VIDEO'" [src]="getMediaUrl(media.url)" controls
+                    class="carousel-media"></video>
+            </div>
+
+            @if (p.media.length > 1) {
+            <button mat-icon-button class="nav-btn prev" (click)="prevSlide($event)">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button mat-icon-button class="nav-btn next" (click)="nextSlide($event)">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+            <div class="slide-counter">{{ currentSlide() + 1 }} / {{ p.media.length }}</div>
+            }
+        </div>
         }
 
         <mat-card-actions>

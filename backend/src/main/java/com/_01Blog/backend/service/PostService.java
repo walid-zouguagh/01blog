@@ -152,7 +152,7 @@ public class PostService {
         }
 
         if (postDto.getMedia() != null) {
-            for ( MediaDto media : postDto.getMedia()) {
+            for (MediaDto media : postDto.getMedia()) {
                 postMediaRepository.save(MediaMapper.toEntity(media, postUpdated));
             }
         }

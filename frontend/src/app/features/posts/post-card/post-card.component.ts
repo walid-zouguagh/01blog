@@ -40,9 +40,25 @@ export class PostCardComponent {
         return `${baseUrl}${url}`;
     }
 
+    currentSlide = signal(0);
+
     ngOnInit() {
         this.liked.set(this.post.isLiked || false);
         this.likeCount.set(this.post.nbrOfLike || 0);
+    }
+
+    nextSlide(event: Event) {
+        event.stopPropagation();
+        if (this.post.media && this.post.media.length > 1) {
+            this.currentSlide.update(curr => (curr + 1) % this.post.media.length);
+        }
+    }
+
+    prevSlide(event: Event) {
+        event.stopPropagation();
+        if (this.post.media && this.post.media.length > 1) {
+            this.currentSlide.update(curr => (curr - 1 + this.post.media.length) % this.post.media.length);
+        }
     }
 
     openReportDialog() {

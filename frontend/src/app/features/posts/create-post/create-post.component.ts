@@ -18,15 +18,14 @@ import { inject } from '@angular/core';
 })
 export class CreatePostComponent {
     postForm: FormGroup;
-    selectedFile: File | null = null;
-    previewUrl: string | null = null;
-    mediaType: 'IMAGE' | 'VIDEO' | null = null;
+    selectedFiles: File[] = [];
+    previews: { url: string, type: 'IMAGE' | 'VIDEO', file?: File }[] = [];
     isSubmitting = signal(false);
 
     isEditing = signal(false);
     postId: string | null = null;
 
-    private route = inject(ActivatedRoute); // Use inject for consistency or constructor
+    private route = inject(ActivatedRoute);
 
     constructor(private fb: FormBuilder, private postService: PostService, private router: Router, private activatedRoute: ActivatedRoute) {
         this.postForm = this.fb.group({
@@ -43,6 +42,12 @@ export class CreatePostComponent {
         }
     }
 
+    getMediaUrl(url: string | undefined): string {
+        if (!url) return '';
+        if (url.startsWith('http')) return url;
+        return `http://localhost:8080${url}`;
+    }
+
     loadPostData(id: string) {
         this.postService.getPost(id).subscribe({
             next: (post) => {
@@ -50,10 +55,12 @@ export class CreatePostComponent {
                     title: post.title,
                     content: post.content
                 });
-                // Handle media preview if needed
+
                 if (post.media && post.media.length > 0) {
-                    this.previewUrl = post.media[0].url;
-                    this.mediaType = post.media[0].type;
+                    this.previews = post.media.map(m => ({
+                        url: this.getMediaUrl(m.url),
+                        type: m.type
+                    }));
                 }
             },
             error: (err) => {
@@ -64,19 +71,46 @@ export class CreatePostComponent {
     }
 
     onFileSelected(event: any) {
-        const file = event.target.files[0];
-        if (file) {
-            this.selectedFile = file;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.previewUrl = e.target?.result as string;
-            };
-            reader.readAsDataURL(file);
+        const files: FileList = event.target.files;
+        if (files) {
+            const newFiles = Array.from(files);
+            const currentCount = this.selectedFiles.length + this.previews.filter(p => !p.file).length;
 
-            if (file.type.startsWith('image/')) {
-                this.mediaType = 'IMAGE';
-            } else if (file.type.startsWith('video/')) {
-                this.mediaType = 'VIDEO';
+            if (this.previews.length + newFiles.length > 5) {
+                alert('Maximum 5 files allowed');
+                return;
+            }
+
+            // Append new files
+            this.selectedFiles = [...this.selectedFiles, ...newFiles];
+
+            // Generate previews for new files
+            newFiles.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const type = file.type.startsWith('image/') ? 'IMAGE' : 'VIDEO';
+                    this.previews.push({
+                        url: e.target?.result as string,
+                        type: type as 'IMAGE' | 'VIDEO',
+                        file: file
+                    });
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Clear input value so same file can be selected again if needed
+            event.target.value = '';
+        }
+    }
+
+    removeMedia(index: number) {
+        const itemToRemove = this.previews[index];
+        this.previews.splice(index, 1);
+
+        if (itemToRemove.file) {
+            const fileIndex = this.selectedFiles.indexOf(itemToRemove.file);
+            if (fileIndex > -1) {
+                this.selectedFiles.splice(fileIndex, 1);
             }
         }
     }
@@ -89,14 +123,12 @@ export class CreatePostComponent {
             formData.append('title', this.postForm.get('title')?.value);
             formData.append('content', this.postForm.get('content')?.value);
 
-            if (this.selectedFile) {
-                formData.append('images', this.selectedFile);
-            }
+            // Append all selected files
+            this.selectedFiles.forEach(file => {
+                formData.append('images', file);
+            });
 
             if (this.isEditing() && this.postId) {
-                // For edit, we might need to handle deleteImage logic or stick to current backend capabilities
-                // Backend editPost expects PostDto.
-                // It also checks ID.
                 formData.append('id', this.postId);
 
                 this.postService.editPost(formData).subscribe({

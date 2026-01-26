@@ -18,16 +18,25 @@
             </mat-form-field>
 
             <div class="media-upload-section">
-                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,video/*" hidden>
+                <!-- Added multiple attribute -->
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,video/*" hidden
+                    multiple>
                 <button type="button" mat-stroked-button (click)="fileInput.click()">
-                    <mat-icon>add_photo_alternate</mat-icon> {{ isEditing() ? 'Change Media' : 'Add Media' }}
+                    <mat-icon>add_photo_alternate</mat-icon> {{ isEditing() ? 'Change Media' : 'Add Media (Max 5)' }}
                 </button>
 
-                <div *ngIf="selectedFile || (isEditing() && previewUrl)" class="file-preview">
-                    <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
-                    <img *ngIf="mediaType === 'IMAGE' && previewUrl" [src]="previewUrl" class="preview-media">
-                    <video *ngIf="mediaType === 'VIDEO' && previewUrl" [src]="previewUrl" controls
-                        class="preview-media"></video>
+                <!-- Preview Grid -->
+                <!-- Note: In TS we have `previews` array now -->
+                <div class="previews-grid" *ngIf="previews.length > 0">
+                    @for (media of previews; track $index) {
+                    <div class="media-item">
+                        <button type="button" mat-icon-button class="remove-btn" (click)="removeMedia($index)">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <img *ngIf="media.type === 'IMAGE'" [src]="media.url" class="preview-media">
+                        <video *ngIf="media.type === 'VIDEO'" [src]="media.url" controls class="preview-media"></video>
+                    </div>
+                    }
                 </div>
             </div>
 
