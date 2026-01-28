@@ -45,8 +45,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/forme")
-    public RegisterDto forMeDto(@RequestAttribute("user") User user) {
-        return UserMapper.toDto(user);
+    public RegisterDto forMeDto(@RequestAttribute("user") User user) throws ExceptionProgram {
+        return userService.profile(user.getId(), user);
     }
 
     // Get Profile
@@ -58,8 +58,9 @@ public class UserController {
     }
 
     @GetMapping(path = "/search")
-    public List<RegisterDto> searchUsers(@RequestParam("name") String name) {
-        return userService.searchUsers(name);
+    public List<RegisterDto> searchUsers(@RequestParam("name") String name,
+            @RequestAttribute(value = "user", required = false) User user) {
+        return userService.searchUsers(name, user);
     }
 
     // @PostMapping(value = "/register", consumes = "multipart/form-data")

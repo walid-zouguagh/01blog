@@ -25,8 +25,7 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
 
-    // Set Notification
-    @Async
+    // Set Notification - Synchronous execution
     @Transactional
     public void setNotification(User fromUser, Post post) {
         int offset = 0;
@@ -34,13 +33,16 @@ public class NotificationService {
         UUID userId = fromUser.getId();
         do {
             listIdUsers = subscriptionRepository.getFollowers(userId, offset);
-            if (listIdUsers == null || listIdUsers.size() == 0)
+
+            if (listIdUsers == null || listIdUsers.isEmpty())
                 break;
 
             for (UUID idUser : listIdUsers) {
                 User toUser = userRepository.findById(idUser).orElse(null);
                 if (toUser != null) {
-                    saveNotification(fromUser, toUser, post, "created new post");
+                    // Use getUserName() (display name) instead of getUsername() (email)
+                    String message = fromUser.getUserName() + " created new post";
+                    saveNotification(fromUser, toUser, post, message);
                 }
             }
             offset += 10;

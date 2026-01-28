@@ -4,6 +4,7 @@
 
     <ng-container *ngIf="auth.currentUser(); else loginLinks">
         <a mat-button routerLink="/feed" routerLinkActive="active-link">Feed</a>
+        <a mat-button routerLink="/search" routerLinkActive="active-link">Search</a>
         <a mat-button routerLink="/create-post" routerLinkActive="active-link">Create Post</a>
 
         <!-- Notifications -->

@@ -35,8 +35,17 @@ public class UserMapper {
         registerDto.setFirstName((String) user.get("firstName"));
         registerDto.setLastName((String) user.get("lastName"));
         registerDto.setUrlProfileImage((String) user.get("profileImage"));
-        registerDto.setRole((Role) user.get("role"));
+        String roleString = (String) user.get("role");
+        if (roleString != null) {
+            registerDto.setRole(Role.valueOf(roleString));
+        }
         registerDto.setBio((String) user.get("bio"));
+        if (user.get("follower") != null) {
+            registerDto.setFollowers(((Number) user.get("follower")).intValue());
+        }
+        if (user.get("following") != null) {
+            registerDto.setFollowing(((Number) user.get("following")).intValue());
+        }
         return registerDto;
     }
 

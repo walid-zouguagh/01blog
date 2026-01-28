@@ -90,6 +90,7 @@ public class PostService {
 
         // Send Notifications
         notificationService.setNotification(user, savedPost);
+
         // Return clean DTO
         return postMapper.toDto(savedPost);
     }

@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class SubscriptionService {
-    private SubscriptionRepository subscriptionRepository;
-    private UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
+    private final UserRepository userRepository;
     // private NotificationService notificationService;
 
     @Transactional
@@ -40,7 +40,6 @@ public class SubscriptionService {
         } else {
             // add subscription
             // add notification
-
             Subscription subscription = new Subscription();
             subscription.setFollowerId(user);
             subscription.setFollowingId(followingUser);

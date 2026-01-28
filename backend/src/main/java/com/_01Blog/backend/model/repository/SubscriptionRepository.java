@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,8 +19,9 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, UUID
                             """, nativeQuery = true)
         boolean isFollowing(@Param("userId") UUID userId, @Param("dataUser") UUID id);
 
+        @Modifying
         @Query(value = """
-                        DELETE FROM subscriptions s WHERE s.follower_id = :userId AND s.following_id = :followingUserId
+                        DELETE FROM subscriptions WHERE follower_id = :userId AND following_id = :followingUserId
                         """, nativeQuery = true)
         void deleteSubscription(@Param("userId") UUID userId, @Param("followingUserId") UUID followingUserId);
 

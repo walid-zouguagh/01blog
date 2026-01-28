@@ -28,7 +28,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        System.err.println("DEBUG: Checking shouldNotFilter for URI: " + request.getRequestURI());
         String path = request.getRequestURI();
         return path.startsWith("/auth/login") || path.startsWith("/auth/register");
     }
@@ -38,34 +37,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        System.err.println("DEBUG: Executing doFilterInternal for URI: " + request.getRequestURI());
 
         String header = request.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {
-            System.err.println("DEBUG: No Authorization header or valid prefix found.");
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = header.substring(7);
-        System.err.println("DEBUG: Token found: " + token);
 
         String email = null;
         try {
             email = jwtService.extractUsername(token);
-            System.err.println("DEBUG: Extracted email: " + email);
         } catch (Exception e) {
-            System.err.println("DEBUG: Failed to extract email from token: " + e.getMessage());
+            // Token extraction failed
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
-            System.err.println("DEBUG: User loaded: " + userDetails.getUsername());
 
             if (jwtService.isTokenValid(token)) {
-                System.err.println("DEBUG: Token is valid.");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -74,15 +67,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.err.println("DEBUG: Authentication set for user: " + userDetails.getUsername()
-                        + " with authorities: " + userDetails.getAuthorities());
                 request.setAttribute("email", email);
                 request.setAttribute("user", userDetails);
-            } else {
-                System.err.println("DEBUG: Token is INVALID.");
             }
-        } else {
-            System.err.println("DEBUG: Email null or Context already set. Email: " + email);
         }
 
         filterChain.doFilter(request, response);

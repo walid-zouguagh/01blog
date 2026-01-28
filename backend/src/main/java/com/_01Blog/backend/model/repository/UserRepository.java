@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value = """
             SELECT
-                u.id, u.user_name, u.first_name, u.last_name, u.bio, u.profile_image, u.role
+                u.id, u.user_name, u.first_name, u.last_name, u.bio, u.profile_image, u.role,
                 COALESCE(flwing.followingCount, 0) AS following,
                 COALESCE(flwer.followerCount, 0) AS follower
                 FROM users u
@@ -43,7 +43,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Map<String, Object> findUserData(@Param("id") UUID id);
 
     @Query(value = """
-                SELECT u FROM users u
+                SELECT * FROM users u
                 WHERE LOWER(u.user_name) LIKE LOWER(CONCAT('%', :name, '%'))
                 OR LOWER(CONCAT(u.first_name, ' ', u.last_name)) LIKE LOWER(CONCAT('%', :name, '%'))
                 OR LOWER(CONCAT(u.last_name, ' ', u.first_name)) LIKE LOWER(CONCAT('%', :name, '%'))

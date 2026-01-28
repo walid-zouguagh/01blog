@@ -32,6 +32,14 @@ export class NavBarComponent {
         if (this.auth.currentUser()) {
             this.loadNotifications();
         }
+
+        // Poll for notifications every 10 seconds
+        // Always start the interval, but only fetch if logged in
+        setInterval(() => {
+            if (this.auth.currentUser()) {
+                this.loadNotifications();
+            }
+        }, 10000);
     }
 
     loadNotifications() {
@@ -46,7 +54,8 @@ export class NavBarComponent {
     markAsRead(id: string) {
         this.notifService.readNotification(id).subscribe(() => {
             this.notifications.update(list => list.map(n => n.id === id ? { ...n, isRead: true } : n));
-            this.unreadCount.update(c => Math.max(0, c - 1));
+            // Update unread count based on list, safer than decrementing
+            this.unreadCount.set(this.notifications().filter(n => !n.isRead).length);
         });
     }
 

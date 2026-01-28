@@ -1,0 +1,38 @@
+<div class="search-container">
+    <div class="search-header">
+        <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search Users</mat-label>
+            <input matInput [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Search by name...">
+            <button mat-icon-button matSuffix (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
+    <div class="results-list">
+        @for (user of users; track user.id) {
+        <div class="user-card">
+            <div class="user-info" [routerLink]="['/profile', user.id]">
+                <img [src]="getProfileImageUrl(user.urlProfileImage)" alt="Profile" class="avatar">
+                <div class="details">
+                    <h3 class="username">{{ user.userName }}</h3>
+                    <p class="name">{{ user.firstName }} {{ user.lastName }}</p>
+                    <p class="bio" *ngIf="user.bio">{{ user.bio }}</p>
+                </div>
+            </div>
+
+            @if (!user.myAccount) {
+            <button mat-flat-button [color]="user.hasConnect ? 'warn' : 'primary'" (click)="toggleFollow(user)">
+                {{ user.hasConnect ? 'Unfollow' : 'Follow' }}
+            </button>
+            }
+        </div>
+        } @empty {
+        @if (searchQuery && users.length === 0) {
+        <div class="no-results">
+            <p>No users found matching "{{ searchQuery }}"</p>
+        </div>
+        }
+        }
+    </div>
+</div>

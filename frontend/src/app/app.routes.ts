@@ -22,6 +22,7 @@ export const routes: Routes = [
             { path: 'edit-post/:id', loadComponent: () => import('./features/posts/create-post/create-post.component').then(m => m.CreatePostComponent) },
             { path: 'profile', loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent) },
             { path: 'profile/:id', loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent) },
+            { path: 'search', loadComponent: () => import('./features/search-users/search-users').then(m => m.SearchUsers) },
             {
                 path: 'admin',
                 canActivate: [adminGuard],

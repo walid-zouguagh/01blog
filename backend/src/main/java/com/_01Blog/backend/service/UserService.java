@@ -113,13 +113,18 @@ public class UserService {
         return userDto;
     }
 
-    public List<RegisterDto> searchUsers(String name) {
+    public List<RegisterDto> searchUsers(String name, User currentUser) {
         List<User> users = userRepository.searchUsers(name);
         return users
                 .stream()
+                .filter(user -> currentUser == null || !user.getId().equals(currentUser.getId()))
                 .map((user) -> {
-                    return UserMapper.toDto(user);
+                    RegisterDto dto = UserMapper.toDto(user);
+                    if (currentUser != null) {
+                        boolean isFollowing = subscriptionRepository.isFollowing(currentUser.getId(), user.getId());
+                        dto.setHasConnect(isFollowing);
+                    }
+                    return dto;
                 }).toList();
-
     }
 }
