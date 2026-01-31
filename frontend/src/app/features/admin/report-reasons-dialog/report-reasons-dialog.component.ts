@@ -5,16 +5,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 
 @Component({
-    selector: 'app-report-reasons-dialog',
-    standalone: true,
-    imports: [CommonModule, MatDialogModule, MatButtonModule, MatListModule],
-    template: `
+  selector: 'app-report-reasons-dialog',
+  standalone: true,
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatListModule],
+  template: `
     <h2 mat-dialog-title>Report Reasons</h2>
     <mat-dialog-content>
       <mat-list>
         @for (item of data.reasons; track $index) {
           <mat-list-item>
-             <span matListItemTitle>{{item.registerDto.userName}}</span>
+             <span matListItemTitle>{{item.username}}</span>
              <span matListItemLine>{{item.reason}}</span>
           </mat-list-item>
         } @empty {
@@ -28,5 +28,5 @@ import { MatListModule } from '@angular/material/list';
   `
 })
 export class ReportReasonsDialogComponent {
-    constructor(@Inject(MAT_DIALOG_DATA) public data: { reasons: any[] }) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { reasons: any[] }) { }
 }

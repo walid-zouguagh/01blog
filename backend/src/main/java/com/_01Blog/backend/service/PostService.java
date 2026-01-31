@@ -170,7 +170,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionProgram(400, "Post Not found"));
 
-        if (post.getUser().getId() == user.getId() || user.getRole() == Role.ADMIN) {
+        if (post.getUser().getId().equals(user.getId()) || user.getRole() == Role.ADMIN) {
             postRepository.deleteById(postId);
         } else {
             throw new ExceptionProgram(400, "you can't delete this post");

@@ -1,20 +1,22 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProfileService } from './services/profile.service';
 import { PostService, Post } from '../../features/posts/services/post.service';
 import { User } from '../../shared/models/user.model';
 import { PostCardComponent } from '../../features/posts/post-card/post-card.component';
 import { AuthService } from '../../core/services/auth.service';
+import { ReportDialogComponent } from '../reports/report-dialog/report-dialog.component';
 
 @Component({
     selector: 'app-profile',
     standalone: true,
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatTabsModule, MatProgressSpinnerModule, PostCardComponent],
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTabsModule, MatProgressSpinnerModule, PostCardComponent, MatDialogModule],
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.css']
 })
@@ -24,6 +26,8 @@ export class ProfileComponent {
     loading = signal(true);
     isCurrentUser = signal(false);
 
+    private dialog = inject(MatDialog);
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -32,7 +36,21 @@ export class ProfileComponent {
         private authService: AuthService
     ) { }
 
+    // ... (rest of methods)
+
+    openReportDialog() {
+        const u = this.user();
+        if (u) {
+            this.dialog.open(ReportDialogComponent, {
+                data: { type: 'USER', targetId: u.id },
+                width: '500px'
+            });
+        }
+    }
+
     getProfileImageUrl(url: string | undefined): string {
+        // ...
+
         if (!url) return 'assets/avatar-placeholder.png';
         if (url.startsWith('http')) return url;
         return `http://localhost:8080${url}`;

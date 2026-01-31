@@ -55,6 +55,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             """, nativeQuery = true)
     List<User> findAllUsers(@Param("offset") int offset, @Param("limit") int limit);
 
+    @org.springframework.data.jpa.repository.Modifying
     @Query(value = """
             UPDATE users SET enabled = :isEnabled WHERE id = :userId
             """, nativeQuery = true)

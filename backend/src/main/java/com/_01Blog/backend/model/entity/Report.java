@@ -50,11 +50,11 @@ public class Report {
     private User reporterId;
 
     @ManyToOne
-    @JoinColumn(name = "reported_user_id", nullable = false)
+    @JoinColumn(name = "reported_user_id", nullable = true)
     private User reportedUserId;
 
     @ManyToOne
-    @JoinColumn(name = "reported_post_id", nullable = false)
+    @JoinColumn(name = "reported_post_id", nullable = true)
     private Post reportedPostId;
 
     @Column(name = "type")

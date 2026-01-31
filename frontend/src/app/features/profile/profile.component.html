@@ -24,6 +24,9 @@
                         (click)="toggleFollow()">
                         {{ user()!.hasConnect ? 'Unfollow' : 'Follow' }}
                     </button>
+                    <button mat-icon-button color="warn" (click)="openReportDialog()" matTooltip="Report User">
+                        <mat-icon>flag</mat-icon>
+                    </button>
                 </div>
                 <div class="actions" *ngIf="isCurrentUser()">
                     <button mat-stroked-button color="primary">Edit Profile</button>

@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "/api/admin")
 public class AdminController {
     public final AdminService adminService;
     public final ReportService reportService;
@@ -30,17 +30,15 @@ public class AdminController {
     // Get All Users for Admin
     @GetMapping(path = "/get-users")
     public List<RegisterDto> getUsers(
-        @RequestParam(name = "offset", defaultValue = "0") int offset,
-        @RequestParam(name = "limit", defaultValue = "0") int limit
-    ) {
+            @RequestParam(name = "offset", defaultValue = "0") int offset,
+            @RequestParam(name = "limit", defaultValue = "100") int limit) {
         return adminService.getUsers(offset, limit);
     }
 
     // Delete User
     @DeleteMapping(path = "/delete-user")
     public ResponseEntity<?> deleteUser(
-        @RequestParam("userId") UUID userId
-    ) throws ExceptionProgram {
+            @RequestParam("userId") UUID userId) throws ExceptionProgram {
         adminService.deleteUser(userId);
         return ResponseEntity.ok(Map.of("userId", userId));
     }
@@ -48,16 +46,14 @@ public class AdminController {
     // Banne User by Admin
     @PutMapping(path = "/banne-user")
     public boolean banneUser(
-        @RequestParam("userId") UUID userId
-    ) throws ExceptionProgram {
+            @RequestParam("userId") UUID userId) throws ExceptionProgram {
         return adminService.banneUser(userId);
     }
 
     // Hide Post By Admin
     @PutMapping(path = "/hide-post")
     public boolean hidePost(
-        @RequestParam("postId") UUID postId
-    ) throws ExceptionProgram{
+            @RequestParam("postId") UUID postId) throws ExceptionProgram {
         return adminService.hidePost(postId);
     }
 
@@ -66,7 +62,7 @@ public class AdminController {
     public List<Map<String, Object>> getReported(@RequestParam(name = "type") TypeReport type) throws ExceptionProgram {
         if (type.equals(TypeReport.USER)) {
             return reportService.getReportedUser();
-        }else if (type.equals(TypeReport.POST)) {
+        } else if (type.equals(TypeReport.POST)) {
             return reportService.getReportedPost();
         }
         return null;
@@ -75,16 +71,14 @@ public class AdminController {
     // get Reason Reported
     @GetMapping(path = "/reason/user")
     public List<Map<String, Object>> getReasonReportedUser(
-        @RequestParam(name = "userId") UUID userId
-    ) throws ExceptionProgram{
+            @RequestParam(name = "userId") UUID userId) throws ExceptionProgram {
         return reportService.getReasonReportedUser(userId);
     }
 
     // get Reason Post
     @GetMapping(path = "/reason/post")
     public List<Map<String, Object>> getReasonReportedPost(
-        @RequestParam(name = "postId") UUID postId
-    ) throws ExceptionProgram{
+            @RequestParam(name = "postId") UUID postId) throws ExceptionProgram {
         return reportService.getReasonReportedPost(postId);
     }
 
