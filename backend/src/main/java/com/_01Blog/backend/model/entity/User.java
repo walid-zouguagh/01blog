@@ -78,6 +78,35 @@ public class User implements UserDetails {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    // ================== RELATIONS FOR CASCADE DELETE ==================
+
+    @jakarta.persistence.OneToMany(mappedBy = "user", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Post> posts = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "userId", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Like> likes = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "user", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Comment> comments = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "fromUser", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Notification> notificationsSent = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "toUser", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Notification> notificationsReceived = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "reporterId", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Report> reportsSubmitted = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "reportedUserId", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Report> reportsReceived = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "followerId", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Subscription> following = new java.util.ArrayList<>();
+
+    @jakarta.persistence.OneToMany(mappedBy = "followingId", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Subscription> followers = new java.util.ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

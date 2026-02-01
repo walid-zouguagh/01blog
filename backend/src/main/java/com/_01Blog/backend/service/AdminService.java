@@ -51,14 +51,13 @@ public class AdminService {
     public boolean banneUser(@NonNull UUID userId) throws ExceptionProgram {
         User user = userRepository.findById(userId).orElseThrow(() -> new ExceptionProgram(400, "this user not found"));
         if (user.getRole().equals(Role.ADMIN)) {
-            throw new ExceptionProgram(400, "you can't banned Admin");
+            throw new ExceptionProgram(400, "you can't ban Admin"); // Fixed typo 'banned'
         }
 
-        userRepository.updateEnabledUser(userId, user.getEnabled().equals(true) ? false : true);
-        // user = userRepository.findById(userId).orElseThrow(() -> new
-        // ExceptionProgram(400, "this user not found"));
-        // return !user.getEnabled().equals(false);
-        return user.isEnabled();
+        boolean newStatus = !user.getEnabled();
+        userRepository.updateEnabledUser(userId, newStatus);
+
+        return newStatus;
     }
 
     // hide post by admin
