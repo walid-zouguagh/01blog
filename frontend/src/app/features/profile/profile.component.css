@@ -115,3 +115,10 @@
     text-align: center;
     color: var(--text-primary);
 }
+
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

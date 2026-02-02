@@ -21,7 +21,7 @@
                 <mat-icon>delete</mat-icon>
                 <span>Delete</span>
             </button>
-            <button mat-menu-item (click)="openReportDialog()">
+            <button mat-menu-item *ngIf="!isOwner()" (click)="openReportDialog()">
                 <mat-icon>flag</mat-icon>
                 <span>Report</span>
             </button>

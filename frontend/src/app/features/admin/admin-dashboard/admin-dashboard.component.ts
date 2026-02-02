@@ -34,6 +34,13 @@ export class AdminDashboardComponent {
         private dialog: MatDialog
     ) { }
 
+    postsOffset = signal(0);
+    hasMorePosts = signal(true);
+    usersOffset = signal(0);
+    hasMoreUsers = signal(true);
+
+    // ...
+
     ngOnInit() {
         this.loadUsers();
         this.loadPosts();
@@ -41,16 +48,61 @@ export class AdminDashboardComponent {
         this.loadReportedPosts();
     }
 
-    loadUsers() {
-        this.adminService.getAllUsers().subscribe({
-            next: (data) => this.users.set(data),
+    loadMoreUsers() {
+        if (this.hasMoreUsers()) {
+            this.usersOffset.update(o => o + 10);
+            this.loadUsers(true);
+        }
+    }
+
+    loadUsers(isLoadMore: boolean = false) {
+        // We need to update AdminService to accept offset/limit. 
+        // Currently getAllUsers() calls 'admin/get-users' with no params.
+        // But backend accepts offset/limit.
+        // Wait, AdminService.ts (Step 3553) getAllUsers() has NO params.
+        // I need to update AdminService.ts FIRST.
+        // For now, I'll pass params manually if I can, but I can't change AdminService call here without changing the service method signature.
+        // Proceeding to update AdminService.ts in next step.
+        this.adminService.getAllUsers(this.usersOffset()).subscribe({
+            next: (data) => {
+                if (data.length < 10) {
+                    this.hasMoreUsers.set(false);
+                } else {
+                    this.hasMoreUsers.set(true);
+                }
+
+                if (isLoadMore) {
+                    this.users.update(current => [...current, ...data]);
+                } else {
+                    this.users.set(data);
+                }
+            },
             error: (err) => console.error(err)
         });
     }
 
-    loadPosts() {
-        this.postService.getAllPosts().subscribe({
-            next: (data) => this.posts.set(data),
+    loadMorePosts() {
+        if (this.hasMorePosts()) {
+            this.postsOffset.update(o => o + 10);
+            this.loadPosts(true);
+        }
+    }
+
+    loadPosts(isLoadMore: boolean = false) {
+        this.postService.getAllPosts(this.postsOffset()).subscribe({
+            next: (data) => {
+                if (data.length < 10) {
+                    this.hasMorePosts.set(false);
+                } else {
+                    this.hasMorePosts.set(true);
+                }
+
+                if (isLoadMore) {
+                    this.posts.update(current => [...current, ...data]);
+                } else {
+                    this.posts.set(data);
+                }
+            },
             error: (err) => console.error(err)
         });
     }

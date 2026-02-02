@@ -34,6 +34,14 @@ import { MatButtonModule } from '@angular/material/button';
           </div>
         }
       }
+      
+      @if (posts().length > 0 && hasMore()) {
+        <div class="load-more-container">
+            <button mat-stroked-button (click)="loadMore()" [disabled]="loading()">
+                {{ loading() ? 'Loading...' : 'Load More' }}
+            </button>
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -41,6 +49,7 @@ import { MatButtonModule } from '@angular/material/button';
       max-width: 700px;
       margin: 0 auto;
       padding-top: 20px;
+      padding-bottom: 40px;
     }
     .feed-tabs {
         display: flex;
@@ -62,6 +71,12 @@ import { MatButtonModule } from '@angular/material/button';
       justify-content: center;
       padding: 40px;
     }
+    .load-more-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
     .empty-state {
       padding: 60px 20px;
       text-align: center;
@@ -81,7 +96,9 @@ import { MatButtonModule } from '@angular/material/button';
 export class PostFeedComponent {
   posts = signal<Post[]>([]);
   loading = signal(true);
-  activeTab = signal<'following' | 'global'>('global'); // Default to global for better UX
+  activeTab = signal<'following' | 'global'>('global');
+  offset = signal(0);
+  hasMore = signal(true);
 
   constructor(private postService: PostService) { }
 
@@ -91,22 +108,42 @@ export class PostFeedComponent {
 
   switchTab(tab: 'following' | 'global') {
     this.activeTab.set(tab);
+    this.offset.set(0);
+    this.hasMore.set(true);
+    this.posts.set([]); // Clear posts on tab switch
     this.loadPosts();
   }
 
-  loadPosts() {
+  loadMore() {
+    if (!this.loading() && this.hasMore()) {
+      this.offset.update(o => o + 10);
+      this.loadPosts(true);
+    }
+  }
+
+  loadPosts(isLoadMore: boolean = false) {
     this.loading.set(true);
     let request;
 
     if (this.activeTab() === 'following') {
-      request = this.postService.getFeed();
+      request = this.postService.getFeed(this.offset());
     } else {
-      request = this.postService.getAllPosts();
+      request = this.postService.getAllPosts(this.offset());
     }
 
     request.subscribe({
       next: (data) => {
-        this.posts.set(data);
+        if (data.length < 10) {
+          this.hasMore.set(false);
+        } else {
+          this.hasMore.set(true);
+        }
+
+        if (isLoadMore) {
+          this.posts.update(current => [...current, ...data]);
+        } else {
+          this.posts.set(data);
+        }
         this.loading.set(false);
       },
       error: (err) => {

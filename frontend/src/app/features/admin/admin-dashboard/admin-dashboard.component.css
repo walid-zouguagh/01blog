@@ -23,3 +23,10 @@ table {
 tr.mat-row:hover {
     background: rgba(0, 0, 0, 0.04);
 }
+
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

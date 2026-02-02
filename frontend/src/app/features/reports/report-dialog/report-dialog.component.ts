@@ -8,15 +8,15 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { ReportService, ReportDto } from '../services/report.service';
 
 export interface ReportDialogData {
-    type: 'POST' | 'USER';
-    targetId: string;
+  type: 'POST' | 'USER';
+  targetId: string;
 }
 
 @Component({
-    selector: 'app-report-dialog',
-    standalone: true,
-    imports: [CommonModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
-    template: `
+  selector: 'app-report-dialog',
+  standalone: true,
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+  template: `
     <h2 mat-dialog-title>Report {{data.type === 'POST' ? 'Post' : 'User'}}</h2>
     <mat-dialog-content>
       <form [formGroup]="form">
@@ -35,48 +35,50 @@ export interface ReportDialogData {
       </button>
     </mat-dialog-actions>
   `,
-    styles: [`
+  styles: [`
     .full-width { width: 100%; }
   `]
 })
 export class ReportDialogComponent {
-    form: FormGroup;
-    loading = signal(false);
+  form: FormGroup;
+  loading = signal(false);
 
-    constructor(
-        private fb: FormBuilder,
-        private reportService: ReportService,
-        private dialogRef: MatDialogRef<ReportDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: ReportDialogData
-    ) {
-        this.form = this.fb.group({
-            reason: ['', [Validators.required, Validators.minLength(10)]]
-        });
-    }
+  constructor(
+    private fb: FormBuilder,
+    private reportService: ReportService,
+    private dialogRef: MatDialogRef<ReportDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ReportDialogData
+  ) {
+    this.form = this.fb.group({
+      reason: ['', [Validators.required, Validators.minLength(10)]]
+    });
+  }
 
-    submit() {
-        if (this.form.invalid) return;
-        this.loading.set(true);
+  submit() {
+    if (this.form.invalid) return;
+    this.loading.set(true);
 
-        const report: ReportDto = {
-            reason: this.form.value.reason,
-            reportedPostId: this.data.type === 'POST' ? this.data.targetId : undefined,
-            reportedUserId: this.data.type === 'USER' ? this.data.targetId : undefined
-        };
+    const report: ReportDto = {
+      reason: this.form.value.reason,
+      reportedPostId: this.data.type === 'POST' ? this.data.targetId : undefined,
+      reportedUserId: this.data.type === 'USER' ? this.data.targetId : undefined
+    };
 
-        const request = this.data.type === 'POST'
-            ? this.reportService.reportPost(report)
-            : this.reportService.reportUser(report);
+    const request = this.data.type === 'POST'
+      ? this.reportService.reportPost(report)
+      : this.reportService.reportUser(report);
 
-        request.subscribe({
-            next: () => {
-                this.loading.set(false);
-                this.dialogRef.close(true);
-            },
-            error: (err) => {
-                console.error(err);
-                this.loading.set(false);
-            }
-        });
-    }
+    request.subscribe({
+      next: () => {
+        this.loading.set(false);
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading.set(false);
+        const msg = err.error?.message || err.error?.error || 'Failed to submit report';
+        alert(msg);
+      }
+    });
+  }
 }

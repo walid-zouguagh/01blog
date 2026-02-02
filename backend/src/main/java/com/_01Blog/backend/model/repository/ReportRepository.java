@@ -9,11 +9,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com._01Blog.backend.model.entity.Post;
 import com._01Blog.backend.model.entity.Report;
+import com._01Blog.backend.model.entity.User;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, UUID> {
+    // check if reports exists
+    boolean existsByReporterIdAndReportedPostId(User reporterId, Post reportedPostId);
 
+    boolean existsByReporterIdAndReportedUserId(User reporterId, User reportedUserId);
     // find report users
 
     @Query(value = """

@@ -24,6 +24,8 @@ export class ProfileComponent {
     user = signal<User | null>(null);
     posts = signal<Post[]>([]);
     loading = signal(true);
+    offset = signal(0);
+    hasMore = signal(true);
     isCurrentUser = signal(false);
 
     private dialog = inject(MatDialog);
@@ -36,8 +38,6 @@ export class ProfileComponent {
         private authService: AuthService
     ) { }
 
-    // ... (rest of methods)
-
     openReportDialog() {
         const u = this.user();
         if (u) {
@@ -49,8 +49,6 @@ export class ProfileComponent {
     }
 
     getProfileImageUrl(url: string | undefined): string {
-        // ...
-
         if (!url) return 'assets/avatar-placeholder.png';
         if (url.startsWith('http')) return url;
         return `http://localhost:8080${url}`;
@@ -74,6 +72,9 @@ export class ProfileComponent {
     }
 
     loadCurrentUser() {
+        this.offset.set(0);
+        this.hasMore.set(true);
+        this.posts.set([]);
         this.profileService.getCurrentUser().subscribe({
             next: (user) => {
                 this.user.set(user);
@@ -88,6 +89,9 @@ export class ProfileComponent {
     }
 
     loadProfile(id: string) {
+        this.offset.set(0);
+        this.hasMore.set(true);
+        this.posts.set([]);
         this.profileService.getProfile(id).subscribe({
             next: (user) => {
                 this.user.set(user);
@@ -98,12 +102,29 @@ export class ProfileComponent {
         });
     }
 
-    loadUserPosts(userId: string) {
-        // Need to update PostService to accept userId for user_post endpoint
-        // Endpoint: user_post?idUserProfile={id}
-        this.postService.getUserPosts(userId).subscribe({
+    loadMore() {
+        const u = this.user();
+        if (u && !this.loading() && this.hasMore()) {
+            this.offset.update(o => o + 10);
+            this.loadUserPosts(u.id, true);
+        }
+    }
+
+    loadUserPosts(userId: string, isLoadMore: boolean = false) {
+        this.loading.set(true);
+        this.postService.getUserPosts(userId, this.offset()).subscribe({
             next: (data) => {
-                this.posts.set(data);
+                if (data.length < 10) {
+                    this.hasMore.set(false);
+                } else {
+                    this.hasMore.set(true);
+                }
+
+                if (isLoadMore) {
+                    this.posts.update(current => [...current, ...data]);
+                } else {
+                    this.posts.set(data);
+                }
                 this.loading.set(false);
             },
             error: (err) => {

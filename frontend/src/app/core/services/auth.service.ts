@@ -44,6 +44,10 @@ export class AuthService {
         return !!localStorage.getItem(this.tokenKey);
     }
 
+    getToken(): string | null {
+        return localStorage.getItem(this.tokenKey);
+    }
+
     private setSession(authResult: AuthResponse) {
         localStorage.setItem(this.tokenKey, authResult.token);
         if (authResult.user) {

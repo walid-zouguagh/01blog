@@ -35,7 +35,11 @@ export class LoginComponent {
                     this.router.navigate(['/']);
                 },
                 error: (err) => {
-                    this.errorMessage.set('Invalid credentials or server error');
+                    if (err.error && (err.error.message || err.error.error)) {
+                        this.errorMessage.set(err.error.message || err.error.error);
+                    } else {
+                        this.errorMessage.set('Invalid credentials or server error');
+                    }
                     console.error(err);
                 }
             });

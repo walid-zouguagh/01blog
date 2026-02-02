@@ -49,6 +49,11 @@ public class ReportService {
             throw new ExceptionProgram(400, "you can't report your post");
         }
 
+        // check if already reported
+        if (reportRepository.existsByReporterIdAndReportedPostId(user, post)) {
+            throw new ExceptionProgram(400, "You already reported this post");
+        }
+
         // check if post is hidden
         if (post.isHidden()) {
             throw new ExceptionProgram(400, "you can't report a hidden post");
@@ -79,6 +84,11 @@ public class ReportService {
         // check user report yourself
         if (userReported.getId().equals(user.getId())) {
             throw new ExceptionProgram(400, "you can't report yourself");
+        }
+
+        // check if already reported
+        if (reportRepository.existsByReporterIdAndReportedUserId(user, userReported)) {
+            throw new ExceptionProgram(400, "You already reported this user");
         }
 
         Report report = new Report();

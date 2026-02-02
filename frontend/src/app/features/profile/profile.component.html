@@ -48,6 +48,13 @@
                     </div>
                     }
                 </div>
+                @if (posts().length > 0 && hasMore()) {
+                <div class="load-more-container">
+                    <button mat-stroked-button (click)="loadMore()" [disabled]="loading()">
+                        {{ loading() ? 'Loading...' : 'Load More' }}
+                    </button>
+                </div>
+                }
             </mat-tab>
             <mat-tab label="About">
                 <div class="about-section">

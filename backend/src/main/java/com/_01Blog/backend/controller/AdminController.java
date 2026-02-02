@@ -31,7 +31,7 @@ public class AdminController {
     @GetMapping(path = "/get-users")
     public List<RegisterDto> getUsers(
             @RequestParam(name = "offset", defaultValue = "0") int offset,
-            @RequestParam(name = "limit", defaultValue = "100") int limit) {
+            @RequestParam(name = "limit", defaultValue = "10") int limit) {
         return adminService.getUsers(offset, limit);
     }
 

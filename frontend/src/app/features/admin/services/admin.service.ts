@@ -12,8 +12,8 @@ export class AdminService {
 
     constructor(private api: ApiService) { }
 
-    getAllUsers(): Observable<User[]> {
-        return this.api.get<User[]>('admin/get-users');
+    getAllUsers(offset: number = 0): Observable<User[]> {
+        return this.api.get<User[]>('admin/get-users', new HttpParams().set('offset', offset));
     }
 
     deleteUser(userId: string): Observable<any> {

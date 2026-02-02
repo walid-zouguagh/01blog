@@ -35,6 +35,9 @@
                     <tr mat-row *matRowDef="let row; columns: displayedUserColumns;"></tr>
                 </table>
             </div>
+            <div class="load-more-container" *ngIf="users().length > 0 && hasMoreUsers()">
+                <button mat-stroked-button (click)="loadMoreUsers()">Load More</button>
+            </div>
         </mat-tab>
 
         <mat-tab label="Posts">
@@ -69,6 +72,9 @@
                     <tr mat-row *matRowDef="let row; columns: displayedPostColumns;"></tr>
                 </table>
             </div>
+            <div class="load-more-container" *ngIf="posts().length > 0 && hasMorePosts()">
+                <button mat-stroked-button (click)="loadMorePosts()">Load More</button>
+            </div>
         </mat-tab>
         <mat-tab label="Reported Users">
             <div class="table-container">
@@ -89,7 +95,9 @@
                         <td mat-cell *matCellDef="let row">
                             <button mat-button color="primary"
                                 (click)="viewUserReportReasons(row.userId)">Reasons</button>
-                            <button mat-button color="warn" (click)="banUser(row.userId)">Ban</button>
+                            <button mat-button [color]="row.enabled ? 'warn' : 'accent'" (click)="banUser(row.userId)">
+                                {{ row.enabled ? 'Ban' : 'Unban' }}
+                            </button>
                         </td>
                     </ng-container>
 
