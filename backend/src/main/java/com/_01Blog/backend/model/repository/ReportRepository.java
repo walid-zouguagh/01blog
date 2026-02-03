@@ -19,6 +19,15 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
     boolean existsByReporterIdAndReportedPostId(User reporterId, Post reportedPostId);
 
     boolean existsByReporterIdAndReportedUserId(User reporterId, User reportedUserId);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("DELETE FROM Report r WHERE r.reportedUserId.id = :userId")
+    void deleteByReportedUserId(@Param("userId") UUID userId);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("DELETE FROM Report r WHERE r.reportedPostId.id = :postId")
+    void deleteByReportedPostId(@Param("postId") UUID postId);
+
     // find report users
 
     @Query(value = """

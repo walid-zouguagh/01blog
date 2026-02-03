@@ -154,4 +154,9 @@ export class ProfileComponent {
             });
         }
     }
+
+    isAdmin(): boolean {
+        const currentUser = this.authService.currentUser();
+        return currentUser?.role === 'ADMIN';
+    }
 }

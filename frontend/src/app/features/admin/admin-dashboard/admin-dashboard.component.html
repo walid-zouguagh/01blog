@@ -98,6 +98,8 @@
                             <button mat-button [color]="row.enabled ? 'warn' : 'accent'" (click)="banUser(row.userId)">
                                 {{ row.enabled ? 'Ban' : 'Unban' }}
                             </button>
+                            <button mat-button color="accent"
+                                (click)="dismissReport(row.userId, 'USER')">Dismiss</button>
                         </td>
                     </ng-container>
 
@@ -127,6 +129,8 @@
                             <button mat-button color="primary"
                                 (click)="viewPostReportReasons(row.postId)">Reasons</button>
                             <button mat-button color="warn" (click)="deletePost(row.postId)">Delete</button>
+                            <button mat-button color="accent"
+                                (click)="dismissReport(row.postId, 'POST')">Dismiss</button>
                         </td>
                     </ng-container>
 

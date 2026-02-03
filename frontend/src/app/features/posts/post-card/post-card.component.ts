@@ -95,16 +95,19 @@ export class PostCardComponent {
     }
 
     deletePost() {
-        if (confirm('Are you sure you want to delete this post?')) {
-            this.postService.deletePost(this.post.id).subscribe({
-                next: () => this.postDeleted.emit(this.post.id),
-                error: (err) => alert('Failed to delete post')
-            });
-        }
+        this.postService.deletePost(this.post.id).subscribe({
+            next: () => this.postDeleted.emit(this.post.id),
+            error: (err) => console.error('Failed to delete post', err)
+        });
     }
 
     isOwner(): boolean {
         const currentUser = this.auth.currentUser();
         return currentUser?.id === this.post.user.id;
+    }
+
+    isAdmin(): boolean {
+        const currentUser = this.auth.currentUser();
+        return currentUser?.role === 'ADMIN';
     }
 }

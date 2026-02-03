@@ -76,4 +76,17 @@ public class AdminService {
                 "reportedUsers", reportRepository.countReportUser(),
                 "reportedPosts", reportRepository.countReportPost());
     }
+
+    // Delete Reports (Dismiss)
+    @Transactional
+    public void deleteReports(UUID id, String type) {
+        if ("USER".equalsIgnoreCase(type)) {
+            reportRepository.deleteByReportedUserId(id);
+            userRepository.updateEnabledUser(id, true); // Auto-Unban
+        } else if ("POST".equalsIgnoreCase(type)) {
+            reportRepository.deleteByReportedPostId(id);
+            // Optional: Unhide post if we wanted similar logic?
+            // For now, explicit User Unban only as requested.
+        }
+    }
 }

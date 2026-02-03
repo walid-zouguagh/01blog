@@ -24,7 +24,8 @@
                         (click)="toggleFollow()">
                         {{ user()!.hasConnect ? 'Unfollow' : 'Follow' }}
                     </button>
-                    <button mat-icon-button color="warn" (click)="openReportDialog()" matTooltip="Report User">
+                    <button mat-icon-button color="warn" (click)="openReportDialog()" matTooltip="Report User"
+                        *ngIf="!isAdmin() && user()?.role !== 'ADMIN'">
                         <mat-icon>flag</mat-icon>
                     </button>
                 </div>

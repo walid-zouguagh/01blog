@@ -49,6 +49,11 @@ export class AdminService {
         return this.api.get('admin/reason/post', params);
     }
 
+    deleteReports(id: string, type: 'USER' | 'POST'): Observable<void> {
+        const params = new HttpParams().set('id', id).set('type', type);
+        return this.api.delete('admin/delete-reports', params);
+    }
+
     banUser(userId: string): Observable<boolean> {
         const params = new HttpParams().set('userId', userId);
         return this.api.put('admin/banne-user', {}, params); // Ensure ApiService put supports params (it doesn't yet)

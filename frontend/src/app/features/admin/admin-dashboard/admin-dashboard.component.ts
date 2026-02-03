@@ -122,35 +122,29 @@ export class AdminDashboardComponent {
     }
 
     deleteUser(userId: string) {
-        if (confirm('Are you sure you want to delete this user?')) {
-            this.adminService.deleteUser(userId).subscribe({
-                next: () => {
-                    this.users.update(list => list.filter(u => u.id !== userId));
-                },
-                error: (err) => alert('Failed to delete user')
-            });
-        }
+        this.adminService.deleteUser(userId).subscribe({
+            next: () => {
+                this.users.update(list => list.filter(u => u.id !== userId));
+            },
+            error: (err) => console.error('Failed to delete user', err)
+        });
     }
 
     deletePost(postId: string) {
-        if (confirm('Are you sure you want to delete this post?')) {
-            this.adminService.deletePost(postId).subscribe({
-                next: () => {
-                    this.posts.update(list => list.filter(p => p.id !== postId));
-                    this.loadReportedPosts(); // Reload reports as well
-                },
-                error: (err) => alert('Failed to delete post')
-            });
-        }
+        this.adminService.deletePost(postId).subscribe({
+            next: () => {
+                this.posts.update(list => list.filter(p => p.id !== postId));
+                this.loadReportedPosts(); // Reload reports as well
+            },
+            error: (err) => console.error('Failed to delete post', err)
+        });
     }
 
     banUser(userId: string) {
-        if (confirm('Ban this user?')) {
-            this.adminService.banUser(userId).subscribe(() => {
-                this.loadUsers();
-                this.loadReportedUsers();
-            });
-        }
+        this.adminService.banUser(userId).subscribe(() => {
+            this.loadUsers();
+            this.loadReportedUsers();
+        });
     }
 
     viewUserReportReasons(userId: string) {
@@ -168,6 +162,19 @@ export class AdminDashboardComponent {
                 data: { reasons },
                 width: '500px'
             });
+        });
+    }
+
+    dismissReport(id: string, type: 'USER' | 'POST') {
+        this.adminService.deleteReports(id, type).subscribe({
+            next: () => {
+                if (type === 'USER') {
+                    this.loadReportedUsers();
+                } else {
+                    this.loadReportedPosts();
+                }
+            },
+            error: (err) => console.error('Failed to dismiss reports', err)
         });
     }
 }

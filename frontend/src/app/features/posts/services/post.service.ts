@@ -7,6 +7,7 @@ export interface UserSummary {
     id: string; // UUID
     userName: string;
     urlProfileImage?: string;
+    role: 'USER' | 'ADMIN';
 }
 
 export interface Post {

@@ -17,11 +17,12 @@
                 <mat-icon>edit</mat-icon>
                 <span>Edit</span>
             </button>
-            <button mat-menu-item *ngIf="isOwner()" (click)="deletePost()">
+            <button mat-menu-item *ngIf="isOwner() || isAdmin()" (click)="deletePost()">
                 <mat-icon>delete</mat-icon>
                 <span>Delete</span>
             </button>
-            <button mat-menu-item *ngIf="!isOwner()" (click)="openReportDialog()">
+            <button mat-menu-item *ngIf="!isOwner() && !isAdmin() && post.user.role !== 'ADMIN'"
+                (click)="openReportDialog()">
                 <mat-icon>flag</mat-icon>
                 <span>Report</span>
             </button>

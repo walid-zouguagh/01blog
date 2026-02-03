@@ -57,6 +57,14 @@ public class AdminController {
         return adminService.hidePost(postId);
     }
 
+    // Delete Reports (Dismiss)
+    @DeleteMapping(path = "/delete-reports")
+    public void deleteReports(
+            @RequestParam("id") UUID id,
+            @RequestParam("type") String type) {
+        adminService.deleteReports(id, type);
+    }
+
     // get Reported : Report User | Post
     @GetMapping(path = "/reported")
     public List<Map<String, Object>> getReported(@RequestParam(name = "type") TypeReport type) throws ExceptionProgram {
