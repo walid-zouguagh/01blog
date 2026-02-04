@@ -19,7 +19,8 @@ import { inject } from '@angular/core';
 export class CreatePostComponent {
     postForm: FormGroup;
     selectedFiles: File[] = [];
-    previews: { url: string, type: 'IMAGE' | 'VIDEO', file?: File }[] = [];
+    previews: { url: string, type: 'IMAGE' | 'VIDEO', file?: File, originalUrl?: string }[] = [];
+    imagesToDelete: string[] = [];
     isSubmitting = signal(false);
 
     isEditing = signal(false);
@@ -59,7 +60,8 @@ export class CreatePostComponent {
                 if (post.media && post.media.length > 0) {
                     this.previews = post.media.map(m => ({
                         url: this.getMediaUrl(m.url),
-                        type: m.type
+                        type: m.type,
+                        originalUrl: m.url // Store relative path for deletion
                     }));
                 }
             },
@@ -74,8 +76,7 @@ export class CreatePostComponent {
         const files: FileList = event.target.files;
         if (files) {
             const newFiles = Array.from(files);
-            const currentCount = this.selectedFiles.length + this.previews.filter(p => !p.file).length;
-
+            // Check count
             if (this.previews.length + newFiles.length > 5) {
                 alert('Maximum 5 files allowed');
                 return;
@@ -108,10 +109,14 @@ export class CreatePostComponent {
         this.previews.splice(index, 1);
 
         if (itemToRemove.file) {
+            // It was a new file
             const fileIndex = this.selectedFiles.indexOf(itemToRemove.file);
             if (fileIndex > -1) {
                 this.selectedFiles.splice(fileIndex, 1);
             }
+        } else if (itemToRemove.originalUrl) {
+            // It was an existing file -> Mark for deletion
+            this.imagesToDelete.push(itemToRemove.originalUrl);
         }
     }
 
@@ -123,9 +128,14 @@ export class CreatePostComponent {
             formData.append('title', this.postForm.get('title')?.value);
             formData.append('content', this.postForm.get('content')?.value);
 
-            // Append all selected files
+            // Append all NEW selected files
             this.selectedFiles.forEach(file => {
                 formData.append('images', file);
+            });
+
+            // Append deleted images list
+            this.imagesToDelete.forEach(url => {
+                formData.append('deleteImage', url);
             });
 
             if (this.isEditing() && this.postId) {

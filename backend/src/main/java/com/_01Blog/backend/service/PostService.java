@@ -101,7 +101,7 @@ public class PostService {
         Post postUpdated = postRepository.findById(postDto.getId())
                 .orElseThrow(() -> new ExceptionProgram(400, "Post Don't found"));
 
-        if (postDto.getUser().getId() != user.getId() || postUpdated.isHidden()) {
+        if (!postUpdated.getUser().getId().equals(user.getId()) || postUpdated.isHidden()) {
             throw new ExceptionProgram(404, "You cannot update this post.");
         }
 
@@ -145,11 +145,18 @@ public class PostService {
             }
         }
         if (deleteImage != null) {
+            // Use orphanRemoval to delete media by removing from the list
+            List<PostMedia> mediasToRemove = new ArrayList<>();
             for (String url : deleteImage) {
-                if (Upload.contain(medias, url)) {
-                    postMediaRepository.deleteByUrl(url);
+                for (PostMedia media : postUpdated.getMedias()) {
+                    if (media.getUrl().equals(url)) {
+                        mediasToRemove.add(media);
+                        // Also physically delete the file from disk (optional but good practice)
+                        Upload.delete(media.getUrl().substring(media.getUrl().lastIndexOf("/") + 1), media.getType());
+                    }
                 }
             }
+            postUpdated.getMedias().removeAll(mediasToRemove);
         }
 
         if (postDto.getMedia() != null) {
