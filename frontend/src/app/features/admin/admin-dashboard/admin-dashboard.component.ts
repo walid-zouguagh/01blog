@@ -122,29 +122,35 @@ export class AdminDashboardComponent {
     }
 
     deleteUser(userId: string) {
-        this.adminService.deleteUser(userId).subscribe({
-            next: () => {
-                this.users.update(list => list.filter(u => u.id !== userId));
-            },
-            error: (err) => console.error('Failed to delete user', err)
-        });
+        if (confirm('Are you sure you want to delete this user?')) {
+            this.adminService.deleteUser(userId).subscribe({
+                next: () => {
+                    this.users.update(list => list.filter(u => u.id !== userId));
+                },
+                error: (err) => console.error('Failed to delete user', err)
+            });
+        }
     }
 
     deletePost(postId: string) {
-        this.adminService.deletePost(postId).subscribe({
-            next: () => {
-                this.posts.update(list => list.filter(p => p.id !== postId));
-                this.loadReportedPosts(); // Reload reports as well
-            },
-            error: (err) => console.error('Failed to delete post', err)
-        });
+        if (confirm('Are you sure you want to delete this post?')) {
+            this.adminService.deletePost(postId).subscribe({
+                next: () => {
+                    this.posts.update(list => list.filter(p => p.id !== postId));
+                    this.loadReportedPosts(); // Reload reports as well
+                },
+                error: (err) => console.error('Failed to delete post', err)
+            });
+        }
     }
 
     banUser(userId: string) {
-        this.adminService.banUser(userId).subscribe(() => {
-            this.loadUsers();
-            this.loadReportedUsers();
-        });
+        if (confirm('Are you sure you want to ban/unban this user?')) {
+            this.adminService.banUser(userId).subscribe(() => {
+                this.loadUsers();
+                this.loadReportedUsers();
+            });
+        }
     }
 
     viewUserReportReasons(userId: string) {
@@ -166,15 +172,21 @@ export class AdminDashboardComponent {
     }
 
     dismissReport(id: string, type: 'USER' | 'POST') {
-        this.adminService.deleteReports(id, type).subscribe({
-            next: () => {
-                if (type === 'USER') {
-                    this.loadReportedUsers();
-                } else {
-                    this.loadReportedPosts();
-                }
-            },
-            error: (err) => console.error('Failed to dismiss reports', err)
-        });
+        const message = type === 'USER'
+            ? 'Are you sure you want to dismiss reports? This will also UNBAN the user if they were banned.'
+            : 'Are you sure you want to dismiss reports for this post?';
+
+        if (confirm(message)) {
+            this.adminService.deleteReports(id, type).subscribe({
+                next: () => {
+                    if (type === 'USER') {
+                        this.loadReportedUsers();
+                    } else {
+                        this.loadReportedPosts();
+                    }
+                },
+                error: (err) => console.error('Failed to dismiss reports', err)
+            });
+        }
     }
 }

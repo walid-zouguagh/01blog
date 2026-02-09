@@ -95,10 +95,12 @@ export class PostCardComponent {
     }
 
     deletePost() {
-        this.postService.deletePost(this.post.id).subscribe({
-            next: () => this.postDeleted.emit(this.post.id),
-            error: (err) => console.error('Failed to delete post', err)
-        });
+        if (confirm('Are you sure you want to delete this post?')) {
+            this.postService.deletePost(this.post.id).subscribe({
+                next: () => this.postDeleted.emit(this.post.id),
+                error: (err) => console.error('Failed to delete post', err)
+            });
+        }
     }
 
     isOwner(): boolean {
