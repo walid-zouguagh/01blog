@@ -14,7 +14,7 @@ public class UserMapper {
 
         RegisterDto registerDto = new RegisterDto();
         registerDto.setId(user.getId());
-        registerDto.setUserName(user.getUsername());
+        registerDto.setUserName(user.getUserName());
         registerDto.setFirstName(user.getFirstName());
         registerDto.setLastName(user.getLastName());
         registerDto.setUrlProfileImage(user.getProfileImage());

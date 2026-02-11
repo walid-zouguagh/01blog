@@ -124,8 +124,32 @@ export class PostDetailsComponent {
                 this.comments.update(list => [newComment, ...list]);
                 this.commentForm.reset();
                 // Optionally update post comment count
+                this.post.update(p => p ? { ...p, nbrOfComments: (p.nbrOfComments || 0) + 1 } : null);
             },
             error: (err) => console.error(err)
         });
+    }
+
+    deleteComment(commentId: string) {
+        if (confirm('Are you sure you want to delete this comment?')) {
+            this.commentService.deleteComment(commentId).subscribe({
+                next: () => {
+                    this.comments.update(list => list.filter(c => c.id !== commentId));
+                    this.post.update(p => p ? { ...p, nbrOfComments: (p.nbrOfComments || 0) - 1 } : null);
+                },
+                error: (err) => console.error('Failed to delete comment', err)
+            });
+        }
+    }
+
+    isCommentOwnerOrAdmin(comment: CommentDto): boolean {
+        const currentUser = this.auth.currentUser();
+        if (!currentUser) return false;
+
+        // Admin can delete any comment
+        if (currentUser.role === 'ADMIN') return true;
+
+        // User can delete their own comment
+        return currentUser.id === comment.user.id;
     }
 }

@@ -55,7 +55,9 @@ public class CommentService {
                 .orElseThrow(() -> new ExceptionProgram(404, "Comment not found"));
 
         // SECURITY CHECK: Only the owner can delete
-        if (!comment.getUser().getId().equals(currentUser.getId())) {
+        // SECURITY CHECK: Only the owner or ADMIN can delete
+        if (!comment.getUser().getId().equals(currentUser.getId())
+                && currentUser.getRole() != com._01Blog.backend.model.enums.Role.ADMIN) {
             throw new ExceptionProgram(403, "You can only delete your own comments!");
         }
 

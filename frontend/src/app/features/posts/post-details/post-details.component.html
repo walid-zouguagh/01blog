@@ -67,7 +67,15 @@
                 <div class="comment-content">
                     <div class="comment-header">
                         <span class="username">{{ comment.user.userName }}</span>
-                        <span class="date">{{ comment.createdAt | date:'short' }}</span>
+                        <div class="header-actions">
+                            <span class="date">{{ comment.createdAt | date:'short' }}</span>
+                            @if (isCommentOwnerOrAdmin(comment)) {
+                            <button mat-icon-button color="warn" class="delete-comment-btn"
+                                (click)="deleteComment(comment.id)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            }
+                        </div>
                     </div>
                     <p>{{ comment.content }}</p>
                 </div>

@@ -145,3 +145,28 @@
     color: var(--text-secondary);
     padding: 20px;
 }
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.delete-comment-btn {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0;
+}
+
+.delete-comment-btn mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Ensure the button doesn't look too big */
+.delete-comment-btn .mat-mdc-button-touch-target {
+    width: 24px;
+    height: 24px;
+}
