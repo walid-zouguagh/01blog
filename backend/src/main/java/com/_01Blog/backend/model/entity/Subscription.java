@@ -24,7 +24,9 @@ import lombok.NoArgsConstructor;
 // following_id	BIGINT FK → users.id	Who is followed
 // created_at	TIMESTAMP DEFAULT NOW()	Date followed
 
-@Table(name = "subscriptions")
+@Table(name = "subscriptions", uniqueConstraints = {
+        @jakarta.persistence.UniqueConstraint(columnNames = { "follower_id", "following_id" })
+})
 @Entity
 @Data
 @AllArgsConstructor

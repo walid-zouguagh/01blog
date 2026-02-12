@@ -25,7 +25,9 @@ import lombok.NoArgsConstructor;
 // created_at	TIMESTAMP DEFAULT NOW()	Timestamp
 
 @Entity
-@Table(name = "likes")
+@Table(name = "likes", uniqueConstraints = {
+        @jakarta.persistence.UniqueConstraint(columnNames = { "post_id", "user_id" })
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -7,6 +7,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import com._01Blog.backend.model.entity.User;
 
 import io.jsonwebtoken.Jwts;
@@ -28,6 +29,7 @@ public class JwtService {
     public String generateToken(User user) {
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim("userId", user.getId().toString())
                 .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
@@ -45,16 +47,44 @@ public class JwtService {
                 .getSubject();
     }
 
-    public boolean isTokenValid(String token) {
+    public String extractUserId(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", String.class);
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
+            final String username = extractUsername(token);
+            final String userId = extractUserId(token);
+
+            boolean isUsernameValid = (username.equals(userDetails.getUsername()));
+            boolean isUserIdValid = true;
+
+            if (userDetails instanceof User) {
+                isUserIdValid = userId.equals(((User) userDetails).getId().toString());
+            }
+
+            return (isUsernameValid && isUserIdValid && !isTokenExpired(token));
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
     }
 
 }
