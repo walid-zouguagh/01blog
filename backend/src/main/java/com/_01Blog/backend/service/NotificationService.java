@@ -3,7 +3,6 @@ package com._01Blog.backend.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
