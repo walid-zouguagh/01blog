@@ -74,11 +74,26 @@
     │       └── repository/
     └── pom.xml
 
+    Directory Structure : 01blog-frontend/
+    src/app/
+    ├── core/               # Core singleton services and guards
+    │   ├── guards/         # Route protection logic (AuthGuard, AdminGuard)
+    │   ├── interceptors/   # HTTP Interceptors (AuthToken)
+    │   └── services/       # Global services (AuthService, ApiService)
+    ├── features/           # Feature-specific modules (The main UI blocks)
+    │   ├── admin/          # Admin Dashboard & Services
+    │   ├── auth/           # Login & Register components
+    │   ├── posts/          # Feed, Post Card, Create/Edit Post, Details
+    │   ├── profile/        # User Profile & Settings
+    │   └── reports/        # Report Dialogs
+    ├── layout/             # Main layout shell (Navigation, Sidebar)
+    └── shared/             # Reusable models and UI components
+
 ## How To run
 
-docker start 01blogdb
-zsh rundb.sh
 zsh docker.sh
+zsh rundb.sh
+docker start 01blogdb
 
 psql -U admin -d 01blogdb
 
